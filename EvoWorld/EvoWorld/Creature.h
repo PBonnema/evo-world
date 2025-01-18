@@ -1,16 +1,18 @@
 #pragma once
-#include "Vector.h"
-#include <SFML/Graphics/RenderTarget.hpp>
+#include "Vector2.h"
+#include "CompoundShape.h"
 
 class Creature
 {
 public:
-	typedef Vector<double> Position;
+    typedef Vector2<double> position;
 
-	Creature(const Position& position);
+    explicit Creature(const position& position);
 
-	void draw(sf::RenderTarget& target) const;
+    [[nodiscard]] const CompoundShape& get_shape() const;
+    [[nodiscard]] CompoundShape& get_shape();
 
 private:
-	Position position;
+    position position_;
+    CompoundShape shape_; // Class invariant: position of shape_ is equal to position_
 };

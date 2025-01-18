@@ -1,6 +1,5 @@
 #include "Creature.h"
 #include <SFML/Graphics.hpp>
-#include <iostream>
 #include <vector>
 
 int main()
@@ -10,7 +9,7 @@ int main()
         Creature({300, 500}),
     };
 
-    sf::RenderWindow window(sf::VideoMode({ 1000, 800 }), "Evo World");
+    sf::RenderWindow window(sf::VideoMode({1000, 800}), "Evo World");
 
     while (window.isOpen())
     {
@@ -22,11 +21,11 @@ int main()
 
         window.clear();
 
-		for (const Creature& creature : creatures)
-			creature.draw(window);
+        for (const Creature& creature : creatures)
+        {
+            window.draw(creature.get_shape());
+        }
 
         window.display();
     }
-
-    std::cout << "Hello, World!\n";
 }
