@@ -8,7 +8,9 @@
 
 int main()
 {
-    const std::random_device::result_type seed = std::random_device{}(); // Will be used to obtain a seed for the random number engine
+    // Generate a single seed to be used throughout the application.
+    const std::random_device::result_type seed = std::random_device{}();
+    // Print the seed to the console so that we can reproduce the same results.
     std::cout << "Seed: " << seed << '\n';
 
     const Arena arena{500.0};
