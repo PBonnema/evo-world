@@ -1,17 +1,16 @@
+#include "Creature.h"
+#include <SFML/Graphics.hpp>
 #include <iostream>
 #include <vector>
-#include "SFML/Graphics.hpp"
-
-#include "Creature.h"
 
 int main()
 {
-    const std::vector<Creature> creatures = {
+    const std::vector creatures = {
         Creature({0, 0}),
         Creature({300, 500}),
     };
 
-    sf::RenderWindow window(sf::VideoMode({ 1000, 800 }), "SFML works!");
+    sf::RenderWindow window(sf::VideoMode({ 1000, 800 }), "Evo World");
 
     while (window.isOpen())
     {
