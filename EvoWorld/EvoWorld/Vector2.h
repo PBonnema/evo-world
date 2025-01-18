@@ -17,24 +17,24 @@ public:
 
     [[nodiscard]] constexpr Vector2 operator+(const Vector2& other) const
     {
-        return Vector2(x_ + other.x_, y_ + other.y_);
+        return {x_ + other.x_, y_ + other.y_};
     }
 
     [[nodiscard]] constexpr Vector2 operator-(const Vector2& other) const
     {
-        return Vector2(x_ - other.x_, y_ - other.y_);
+        return {x_ - other.x_, y_ - other.y_};
     }
 
     template <typename U>
     [[nodiscard]] constexpr Vector2 operator*(U scalar) const
     {
-        return Vector2(x_ * scalar, y_ * scalar);
+        return {x_ * scalar, y_ * scalar};
     }
 
     template <typename U>
     [[nodiscard]] constexpr Vector2 operator/(U scalar) const
     {
-        return Vector2(x_ / scalar, y_ / scalar);
+        return {x_ / scalar, y_ / scalar};
     }
 
     constexpr Vector2& operator+=(const Vector2& other)
@@ -134,14 +134,14 @@ public:
 
     [[nodiscard]] constexpr Vector2 get_perpendicular() const
     {
-        return Vector2(-y_, x_);
+        return {-y_, x_};
     }
 
     [[nodiscard]] constexpr Vector2 get_rotated(T angle) const
     {
         T s = std::sin(angle);
         T c = std::cos(angle);
-        return Vector2(x_ * c - y_ * s, x_ * s + y_ * c);
+        return {x_ * c - y_ * s, x_ * s + y_ * c};
     }
 
     [[nodiscard]] constexpr Vector2 get_reflected(const Vector2& normal) const
@@ -171,7 +171,7 @@ public:
 
     [[nodiscard]] constexpr static Vector2 from_polar(const double angle, const double length = 1.0)
     {
-        return Vector2(std::cos(angle) * length, std::sin(angle) * length);
+        return {std::cos(angle) * length, std::sin(angle) * length};
     }
 
     [[nodiscard]] constexpr static Vector2 from_polar(const Vector2& v)
@@ -206,42 +206,42 @@ public:
 
     [[nodiscard]] constexpr static Vector2 min(const Vector2& v1, const Vector2& v2)
     {
-        return Vector2(std::min(v1.x_, v2.x_), std::min(v1.y_, v2.y_));
+        return {std::min(v1.x_, v2.x_), std::min(v1.y_, v2.y_)};
     }
 
     [[nodiscard]] constexpr static Vector2 max(const Vector2& v1, const Vector2& v2)
     {
-        return Vector2(std::max(v1.x_, v2.x_), std::max(v1.y_, v2.y_));
+        return {std::max(v1.x_, v2.x_), std::max(v1.y_, v2.y_)};
     }
 
     [[nodiscard]] constexpr static Vector2 floor(const Vector2& v)
     {
-        return Vector2(std::floor(v.x_), std::floor(v.y_));
+        return {std::floor(v.x_), std::floor(v.y_)};
     }
 
     [[nodiscard]] constexpr static Vector2 ceil(const Vector2& v)
     {
-        return Vector2(std::ceil(v.x_), std::ceil(v.y_));
+        return {std::ceil(v.x_), std::ceil(v.y_)};
     }
 
     [[nodiscard]] constexpr static Vector2 round(const Vector2& v)
     {
-        return Vector2(std::round(v.x_), std::round(v.y_));
+        return {std::round(v.x_), std::round(v.y_)};
     }
 
     [[nodiscard]] constexpr static Vector2 abs(const Vector2& v)
     {
-        return Vector2(std::abs(v.x_), std::abs(v.y_));
+        return {std::abs(v.x_), std::abs(v.y_)};
     }
 
     [[nodiscard]] constexpr static Vector2 clamp(const Vector2& v, const Vector2& min, const Vector2& max)
     {
-        return Vector2(std::clamp(v.x_, min.x_, max.x_), std::clamp(v.y_, min.y_, max.y_));
+        return {std::clamp(v.x_, min.x_, max.x_), std::clamp(v.y_, min.y_, max.y_)};
     }
 
     [[nodiscard]] constexpr static Vector2 clamp(const Vector2& v, T min, T max)
     {
-        return Vector2(std::clamp(v.x_, min, max), std::clamp(v.y_, min, max));
+        return {std::clamp(v.x_, min, max), std::clamp(v.y_, min, max)};
     }
 
 private:
