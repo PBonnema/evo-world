@@ -19,8 +19,3 @@ CompoundShape& Arena::get_shape()
 {
     return shape_;
 }
-
-double Arena::get_radius() const
-{
-    return radius_;
-}
