@@ -143,14 +143,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Arena.cpp" />
     <ClCompile Include="Creature.cpp" />
     <ClCompile Include="CompoundShape.cpp" />
     <ClCompile Include="EvoWorld.cpp" />
+    <ClCompile Include="SumoGame.cpp" />
     <ClCompile Include="Vector2.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Arena.h" />
     <ClInclude Include="Creature.h" />
     <ClInclude Include="CompoundShape.h" />
+    <ClInclude Include="fwd_decl.h" />
+    <ClInclude Include="SumoGame.h" />
     <ClInclude Include="Vector2.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

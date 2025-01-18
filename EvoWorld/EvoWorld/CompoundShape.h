@@ -10,7 +10,6 @@ class CompoundShape final : public sf::Drawable, public sf::Transformable
 public:
     CompoundShape() = default;
     CompoundShape(const std::vector<std::shared_ptr<sf::Drawable>>& drawables);
-    CompoundShape(std::initializer_list<std::shared_ptr<sf::Drawable>> drawables);
     CompoundShape(const CompoundShape& other) = default;
     CompoundShape(CompoundShape&& other) = default;
     ~CompoundShape() override = default;

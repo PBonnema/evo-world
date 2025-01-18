@@ -9,11 +9,6 @@ CompoundShape::CompoundShape(const std::vector<std::shared_ptr<sf::Drawable>>& d
 {
 }
 
-CompoundShape::CompoundShape(const std::initializer_list<std::shared_ptr<sf::Drawable>> drawables) :
-    drawables_{drawables}
-{
-}
-
 void CompoundShape::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
     states.transform *= getTransform();
