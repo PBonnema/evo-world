@@ -23,3 +23,20 @@ CompoundShape& Creature::get_shape()
 {
     return shape_;
 }
+
+const Creature::position& Creature::get_position() const
+{
+    return position_;
+}
+
+void Creature::set_position(const position& position)
+{
+    position_ = position;
+    shape_.setPosition({static_cast<float>(position_.get_x()), static_cast<float>(position_.get_y())});
+}
+
+void Creature::move(const Vector2<double>& displacement)
+{
+    position_ += displacement;
+    shape_.move({static_cast<float>(displacement.get_x()), static_cast<float>(displacement.get_y())});
+}

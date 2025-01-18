@@ -1,4 +1,5 @@
 #pragma once
+#include <chrono>
 #include <random>
 #include <vector>
 
@@ -12,6 +13,7 @@ public:
 
     [[nodiscard]] const Arena& get_arena() const;
     [[nodiscard]] const std::vector<std::shared_ptr<Creature>>& get_participants() const;
+    void update(const std::chrono::duration<double, std::milli>& time_step) const;
 
 private:
     const Arena arena_;

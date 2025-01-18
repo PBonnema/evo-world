@@ -1,6 +1,7 @@
 #include "SumoGame.h"
 
 #include <chrono>
+#include <iostream>
 #include <numbers>
 #include <random>
 
@@ -33,4 +34,17 @@ const Arena& SumoGame::get_arena() const
 const std::vector<std::shared_ptr<Creature>>& SumoGame::get_participants() const
 {
     return participants_;
+}
+
+void SumoGame::update(const std::chrono::duration<double, std::milli>& time_step) const
+{
+    const Vector2 arena_center{arena_.get_radius(), arena_.get_radius()};
+    double speed = 0.01;
+    for (const std::shared_ptr<Creature>& creature : participants_)
+    {
+        speed += 0.01;
+        // Move creature towards the center of the arena with a constant velocity
+        const Vector2 displacement = (arena_center - creature->get_position()).get_normalized() * speed * time_step.count();
+        creature->move(displacement);
+    }
 }

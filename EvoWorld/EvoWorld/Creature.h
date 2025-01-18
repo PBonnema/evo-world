@@ -11,6 +11,10 @@ public:
 
     [[nodiscard]] const CompoundShape& get_shape() const;
     [[nodiscard]] CompoundShape& get_shape();
+    [[nodiscard]] const position& get_position() const;
+    void set_position(const position& position);
+
+    void move(const Vector2<double>& displacement);
 
 private:
     position position_;
