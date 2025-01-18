@@ -2,7 +2,8 @@
 
 #include <SFML/Graphics/CircleShape.hpp>
 
-Arena::Arena(const double radius) :
+Arena::Arena(const Vector2<double>& midpoint, const double radius) :
+    midpoint_{midpoint},
     radius_{radius},
     shape_{{std::make_shared<sf::CircleShape>(static_cast<float>(radius), 100)}}
 {
@@ -18,4 +19,9 @@ const CompoundShape& Arena::get_shape() const
 CompoundShape& Arena::get_shape()
 {
     return shape_;
+}
+
+bool Arena::contains(const Vector2<double>& point) const
+{
+    return Vector2<double>::distance(midpoint_, point) <= radius_;
 }

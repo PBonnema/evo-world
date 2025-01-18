@@ -2,18 +2,19 @@
 #include "Arena.h"
 #include "SumoGame.h"
 #include <SFML/Graphics.hpp>
-#include <vector>
 #include <iostream>
 #include <random>
+#include <ranges>
 
 namespace {
-    void draw(sf::RenderWindow& window, const Arena& arena, const SumoGame& sumo_game)
+    void draw_sumo_game(sf::RenderWindow& window, const Arena& arena, const SumoGame& sumo_game)
     {
         window.clear();
 
         window.draw(arena.get_shape());
 
-        for (const std::shared_ptr<Creature>& creature : sumo_game.get_participants())
+        // Draw all creatures from the sumo game
+        for (const auto& creature : sumo_game.get_participants() | std::views::keys)
         {
             window.draw(creature->get_shape());
         }
@@ -29,15 +30,15 @@ int main()
     // Print the seed to the console so that we can reproduce the same results.
     std::cout << "Seed: " << seed << '\n';
 
-    const Arena arena{500.0};
-    const SumoGame sumo_game{arena, 20, seed};
+    const Arena arena{ {500.0, 500.0}, 500.0};
+    SumoGame sumo_game{arena, 3, seed};
     sf::RenderWindow window{sf::VideoMode{{1000, 1000}}, "Evo World"};
 
     auto last_time = std::chrono::high_resolution_clock::now();
     while (window.isOpen())
     {
         const auto now = std::chrono::high_resolution_clock::now();
-        const auto time_step = std::chrono::duration<double, std::milli>(now - last_time);
+        const auto time_step = now - last_time;
 
         while (const std::optional event = window.pollEvent())
         {
@@ -45,8 +46,8 @@ int main()
                 window.close();
         }
 
-        sumo_game.update(time_step);
-        draw(window, arena, sumo_game);
+        sumo_game.update(time_step, seed);
+        draw_sumo_game(window, arena, sumo_game);
 
         last_time = now;
     }

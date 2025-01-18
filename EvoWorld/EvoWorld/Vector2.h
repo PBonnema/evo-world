@@ -6,14 +6,18 @@ template <typename T>
 struct Vector2
 {
 public:
-    constexpr Vector2(T x, T y) :
+    constexpr Vector2(T x = {}, T y = {}) :
         x_{x},
         y_{y}
     {
     }
 
+    ~Vector2() = default;
+
     constexpr Vector2(const Vector2& other) = default;
+    constexpr Vector2( Vector2&& other) = default;
     constexpr Vector2& operator=(const Vector2& other) = default;
+    constexpr Vector2& operator=(Vector2&& other) = default;
 
     [[nodiscard]] constexpr Vector2 operator+(const Vector2& other) const
     {
@@ -114,7 +118,7 @@ public:
 
     [[nodiscard]] constexpr double get_length() const
     {
-        return std::sqrt(x_ * x_ + y_ * y_);
+        return std::sqrt(get_length_squared());
     }
 
     [[nodiscard]] constexpr T get_length_squared() const
@@ -154,9 +158,29 @@ public:
         return axis * dot(axis) / axis.get_length_squared();
     }
 
+    [[nodiscard]] constexpr Vector2 get_clamped(const Vector2& min, const Vector2& max) const
+    {
+        return {std::clamp(x_, min.x_, max.x_), std::clamp(y_, min.y_, max.y_)};
+    }
+
+    [[nodiscard]] constexpr Vector2 get_clamped(T min, T max) const
+    {
+        return {std::clamp(x_, min, max), std::clamp(y_, min, max)};
+    }
+
+    [[nodiscard]] constexpr Vector2 get_clamped_by_length(T min, T max) const
+    {
+        const double length_squared = get_length_squared();
+        if (length_squared < min * min)
+            return *this * min / std::sqrt(length_squared);
+        if (length_squared > max * max)
+            return *this * max / std::sqrt(length_squared);
+        return *this;
+    }
+
     [[nodiscard]] constexpr static double distance(const Vector2& v1, const Vector2& v2)
     {
-        return (v1 - v2).getLength();
+        return (v1 - v2).get_length();
     }
 
     [[nodiscard]] constexpr static double distance_squared(const Vector2& v1, const Vector2& v2)
@@ -164,7 +188,7 @@ public:
         return (v1 - v2).get_length_squared();
     }
 
-    [[nodiscard]] constexpr static Vector2 lerp(const Vector2& v1, const Vector2& v2, T t)
+    [[nodiscard]] constexpr static Vector2 lerp(const Vector2& v1, const Vector2& v2, double t)
     {
         return v1 + (v2 - v1) * t;
     }
@@ -232,16 +256,6 @@ public:
     [[nodiscard]] constexpr static Vector2 abs(const Vector2& v)
     {
         return {std::abs(v.x_), std::abs(v.y_)};
-    }
-
-    [[nodiscard]] constexpr static Vector2 clamp(const Vector2& v, const Vector2& min, const Vector2& max)
-    {
-        return {std::clamp(v.x_, min.x_, max.x_), std::clamp(v.y_, min.y_, max.y_)};
-    }
-
-    [[nodiscard]] constexpr static Vector2 clamp(const Vector2& v, T min, T max)
-    {
-        return {std::clamp(v.x_, min, max), std::clamp(v.y_, min, max)};
     }
 
 private:
