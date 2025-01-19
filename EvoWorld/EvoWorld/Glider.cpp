@@ -31,7 +31,7 @@ double Glider::get_radius() const
 
 void Glider::apply_impulse(const Vector2<double>& force, const std::chrono::duration<double>& time_step)
 {
-    const auto acceleration = force * time_step.count() / mass_;
+    const auto acceleration = force / mass_;
 
     // Simple Euler integration
     velocity_ += acceleration * time_step.count();

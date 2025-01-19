@@ -13,8 +13,8 @@ public:
     [[nodiscard]] double get_mass() const;
     [[nodiscard]] double get_radius() const;
     void apply_impulse(const Vector2<double>& force, const std::chrono::duration<double>& time_step);
-    [[nodiscard]] Vector2<double> next_sumo_move(std::ranges::input_range auto&& all_gliders,
-                                                 double max_force_amplitude, double coefficient_of_friction) const;
+    [[nodiscard]] Vector2<double> next_sumo_move(std::ranges::input_range auto&& all_gliders, double max_force_magnitude,
+                                                 double coefficient_of_friction) const;
 
 private:
     Vector2<double> position_;
@@ -23,8 +23,8 @@ private:
     double radius_;
 };
 
-Vector2<double> Glider::next_sumo_move(std::ranges::input_range auto&& all_gliders, const double max_force_amplitude,
-    double coefficient_of_friction) const
+Vector2<double> Glider::next_sumo_move(std::ranges::input_range auto&& all_gliders, const double max_force_magnitude,
+                                       double coefficient_of_friction) const
 {
     // Move full force to the nearest opponent
     Vector2<double> nearest_opponent_position;
@@ -43,6 +43,6 @@ Vector2<double> Glider::next_sumo_move(std::ranges::input_range auto&& all_glide
         }
     }
 
-    const Vector2<double> force = (nearest_opponent_position - position_).get_normalized() * max_force_amplitude;
+    const Vector2<double> force = (nearest_opponent_position - position_).get_normalized() * max_force_magnitude;
     return force;
 }
