@@ -33,7 +33,6 @@ const std::unordered_map<std::shared_ptr<Creature>, std::shared_ptr<Glider>>& Su
 void SumoGame::update(const std::chrono::duration<double>& time_step)
 {
     // Ask each creature for their next move (= preferred force)
-    // Clamp their chosen force magnitude to a maximum force
     // sum up forces for each creature and add friction based on their velocity
     // do physics simulation for each creature, according to the time_step
     // including collision detection and make creatures bounce
@@ -55,12 +54,13 @@ void SumoGame::update(const std::chrono::duration<double>& time_step)
 
         // Scale the friction such that the impulse does not exceed the remaining momentum of the glider within this time step
         const double friction_impulse = friction_magnitude * time_step.count();
-        const double remaining_momentum = glider->get_velocity().get_length() * glider->get_mass();
+        const double speed = glider->get_velocity().get_length();
+        const double remaining_momentum = speed * glider->get_mass();
         if (friction_impulse > remaining_momentum)
         {
             friction_magnitude *= remaining_momentum / friction_impulse;
         }
-        const Vector2<double> friction = glider->get_velocity().get_normalized() * -friction_magnitude;
+        const Vector2<double> friction = glider->get_velocity() / (speed * -friction_magnitude);
 
         // Sum up all forces and apply them
         const Vector2<double> total_force = move_force + friction;

@@ -1,6 +1,7 @@
 #pragma once
 #include <cmath>
 #include <algorithm>
+#include <cassert>
 #include <ostream>
 
 template <typename T>
@@ -44,7 +45,9 @@ public:
     template <typename U>
     [[nodiscard]] constexpr Vector2 operator/(U scalar) const
     {
-        return {x_ / scalar, y_ / scalar};
+        if (scalar != 0.0)
+            return {x_ / scalar, y_ / scalar};
+        return *this;
     }
 
     constexpr Vector2& operator+=(const Vector2& other)
@@ -72,8 +75,11 @@ public:
     template <typename U>
     constexpr Vector2& operator/=(U scalar)
     {
-        x_ /= scalar;
-        y_ /= scalar;
+        if (scalar != 0.0)
+        {
+            x_ /= scalar;
+            y_ /= scalar;
+        }
         return *this;
     }
 
@@ -116,10 +122,7 @@ public:
     template <typename U = T>
     [[nodiscard]] constexpr Vector2<U> get_normalized() const
     {
-        double length = get_length();
-        if (length != 0.0)
-            return *this / length;
-        return *this;
+        return *this / get_length();
     }
 
     [[nodiscard]] constexpr double get_length() const
@@ -154,14 +157,16 @@ public:
         return {x_ * c - y_ * s, x_ * s + y_ * c};
     }
 
-    [[nodiscard]] constexpr Vector2 get_reflected(const Vector2& normal) const
-    {
-        return *this - normal * 2 * dot(normal);
-    }
+    // [[nodiscard]] constexpr Vector2 get_reflected(const Vector2& normal) const
+    // {
+    //     assert(normal.get_length_squared() != 0.0);
+    //     return *this - normal * 2 * dot(normal); // TODO unclear what the operator precedence is here
+    // }
 
     [[nodiscard]] constexpr Vector2 get_projected(const Vector2& axis) const
     {
-        return axis * dot(axis) / axis.get_length_squared();
+        assert(axis.get_length_squared() != 0.0);
+        return axis * (dot(axis) / axis.get_length_squared());
     }
 
     [[nodiscard]] constexpr Vector2 get_clamped(const Vector2& min, const Vector2& max) const
@@ -176,7 +181,10 @@ public:
 
     [[nodiscard]] constexpr Vector2 get_clamped_by_length(T min, T max) const
     {
+        assert(min <= max);
+        assert(min >= 0.0);
         const double length_squared = get_length_squared();
+        assert(length_squared > 0.0);
         if (length_squared < min * min)
             return *this * min / std::sqrt(length_squared);
         if (length_squared > max * max)
@@ -216,7 +224,7 @@ public:
 
     [[nodiscard]] constexpr static double angle_between(const Vector2& v1, const Vector2& v2)
     {
-        return acos(std::clamp(v1.dot(v2), -1.0, 1.0));
+        return std::acos(std::clamp(v1.dot(v2), -1.0, 1.0));
     }
 
     [[nodiscard]] constexpr static double signed_angle(const Vector2& v1, const Vector2& v2)

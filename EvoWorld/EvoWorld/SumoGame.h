@@ -16,7 +16,7 @@ public:
 
 private:
     const double max_force_magnitude_{500.0};
-    const double coefficient_of_friction_{200.0};
+    const double coefficient_of_friction_{400.0};
     const double participant_radius_{50.0};
     const double participant_mass_{1.0};
 
