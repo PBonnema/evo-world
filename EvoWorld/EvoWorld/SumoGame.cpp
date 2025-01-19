@@ -14,7 +14,7 @@ SumoGame::SumoGame(Arena arena, const size_t participant_count, const std::mt199
     participant_count_{participant_count},
     random_generator_{random_generator}
 {
-    for (size_t i = 0; i < participant_count_; i++)
+    while (participants_.size() < participant_count_)
     {
         add_new_participant();
     }
@@ -64,7 +64,7 @@ void SumoGame::update(const std::chrono::nanoseconds& time_step)
     // TODO collect all moves before applying them to avoid bias
 
     // Remove participants that are outside the arena
-    // TODO pick actual midpoint of the participant
+    // TODO pick actual center of the participant
     for (auto it = participants_.begin(); it != participants_.end();)
     {
         if (!arena_.contains(it->second->get_position()))
@@ -89,9 +89,12 @@ void SumoGame::add_new_participant()
     // Create creature at a uniform, random position within the circular arena
     std::uniform_real_distribution polar_angle_distribution{0.0, std::numbers::pi * 2};
     std::uniform_real_distribution polar_length_distribution{0.0, 1.0};
+
     const double angle = polar_angle_distribution(random_generator_);
-    const double length = arena_.get_radius() * std::sqrt(polar_length_distribution(random_generator_));
-    const Vector2 position = arena_.get_midpoint() + Creature::position::from_polar(angle, length);
+    // This length calculation ensures the distribution is uniform in the arena
+    const double distance_from_center = arena_.get_radius() * std::sqrt(polar_length_distribution(random_generator_));
+    const Vector2 position = arena_.get_center() + Creature::position::from_polar(angle, distance_from_center);
+
     participants_.emplace(std::make_shared<Creature>(position, participant_radius_),
                           std::make_shared<Glider>(position, participant_mass_, participant_radius_));
 }
