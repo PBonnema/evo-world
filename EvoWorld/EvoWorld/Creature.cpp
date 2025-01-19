@@ -4,9 +4,9 @@
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/Color.hpp>
 
-Creature::Creature(const position& position) :
+Creature::Creature(const position& position, const double radius) :
     position_{position},
-    shape_{{std::make_shared<sf::CircleShape>(10.f)}}
+    shape_{{std::make_shared<sf::CircleShape>(static_cast<float>(radius))}}
 {
     sf::CircleShape& circle = *std::static_pointer_cast<sf::CircleShape>(shape_.get_drawables()[0]);
     circle.setFillColor(sf::Color::Red);

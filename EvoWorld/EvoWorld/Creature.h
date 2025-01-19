@@ -7,7 +7,7 @@ class Creature
 public:
     typedef Vector2<double> position;
 
-    explicit Creature(const position& position);
+    Creature(const position& position, double radius);
 
     [[nodiscard]] const CompoundShape& get_shape() const;
     [[nodiscard]] CompoundShape& get_shape();
