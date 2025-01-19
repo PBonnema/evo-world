@@ -62,6 +62,7 @@ void SumoGame::update(const std::chrono::nanoseconds& time_step)
 
     // TODO call next_sumo_move on a regular interval instead of every frame and remember the last move
     // TODO collect all moves before applying them to avoid bias
+    // TODO implement collision detection and make creatures bounce
 
     // Remove participants that are outside the arena
     for (auto it = participants_.begin(); it != participants_.end();)

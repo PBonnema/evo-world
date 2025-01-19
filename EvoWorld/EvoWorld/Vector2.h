@@ -1,6 +1,7 @@
 #pragma once
 #include <cmath>
 #include <algorithm>
+#include <ostream>
 
 template <typename T>
 struct Vector2
@@ -15,9 +16,14 @@ public:
     ~Vector2() = default;
 
     constexpr Vector2(const Vector2& other) = default;
-    constexpr Vector2( Vector2&& other) = default;
+    constexpr Vector2(Vector2&& other) = default;
     constexpr Vector2& operator=(const Vector2& other) = default;
     constexpr Vector2& operator=(Vector2&& other) = default;
+
+    friend std::ostream& operator<<(std::ostream& lhs, const Vector2& rhs)
+    {
+        return lhs << '(' << rhs.x_ << ", " << rhs.y_ << ')';
+    }
 
     [[nodiscard]] constexpr Vector2 operator+(const Vector2& other) const
     {
