@@ -47,7 +47,7 @@ void SumoGame::update(const std::chrono::nanoseconds& time_step)
             max_force_amplitude_, coefficient_of_friction_);
 
         // Assert the force amplitude is no more than the maximum force amplitude. Otherwise, next_sumo_move is bugged.
-        assert(move_force.get_length() <= max_force_amplitude_ + 0.01); // Allow for a bit of numerical error
+        assert(move_force.get_length() <= max_force_amplitude_ + 0.0001); // Allow for a bit of numerical error
 
         // Apply friction
         // The gravitational constant is implicitly set to 1
@@ -64,10 +64,11 @@ void SumoGame::update(const std::chrono::nanoseconds& time_step)
     // TODO collect all moves before applying them to avoid bias
 
     // Remove participants that are outside the arena
-    // TODO pick actual center of the participant
     for (auto it = participants_.begin(); it != participants_.end();)
     {
-        if (!arena_.contains(it->second->get_position()))
+        auto [_, glider] = *it;
+        const Vector2<double> participant_center = glider->get_position() + Vector2{glider->get_radius(), glider->get_radius()};
+        if (!arena_.contains(participant_center))
         {
             it = participants_.erase(it);
         }

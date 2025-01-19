@@ -1,7 +1,4 @@
 #include "Glider.h"
-
-#include <ranges>
-
 #include "Creature.h"
 
 Glider::Glider(const Vector2<double>& position, const double mass, const double radius) :

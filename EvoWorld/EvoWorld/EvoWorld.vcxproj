@@ -149,7 +149,6 @@
     <ClCompile Include="EvoWorld.cpp" />
     <ClCompile Include="Glider.cpp" />
     <ClCompile Include="SumoGame.cpp" />
-    <ClCompile Include="Vector2.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Arena.h" />
