@@ -144,7 +144,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Arena.cpp" />
-    <ClCompile Include="Creature.cpp" />
     <ClCompile Include="CompoundShape.cpp" />
     <ClCompile Include="EvoWorld.cpp" />
     <ClCompile Include="Glider.cpp" />
@@ -152,7 +151,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Arena.h" />
-    <ClInclude Include="Creature.h" />
     <ClInclude Include="CompoundShape.h" />
     <ClInclude Include="fwd_decl.h" />
     <ClInclude Include="Glider.h" />

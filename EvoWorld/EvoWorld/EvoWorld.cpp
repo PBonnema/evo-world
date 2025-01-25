@@ -1,10 +1,8 @@
-#include "Creature.h"
 #include "Arena.h"
 #include "SumoGame.h"
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <random>
-#include <ranges>
 
 namespace {
     void draw_sumo_game(sf::RenderWindow& window, const Arena& arena, const SumoGame& sumo_game)
@@ -14,7 +12,7 @@ namespace {
         window.draw(arena.get_shape());
 
         // Draw all creatures from the sumo game
-        for (const auto& creature : sumo_game.get_participants() | std::views::keys)
+        for (const std::unique_ptr<Glider>& creature : sumo_game.get_participants())
         {
             window.draw(creature->get_shape());
         }
@@ -32,7 +30,7 @@ int main()
     // Print the seed to the console so that we can reproduce the same results.
     std::cout << "Seed: " << seed << '\n';
 
-    const Arena arena{ {500.0, 500.0}, 500.0};
+    const Arena arena{{500.0, 500.0}, 500.0};
     SumoGame sumo_game{arena, 3, random_generator};
     sf::RenderWindow window{sf::VideoMode{{1000, 1000}}, "Evo World"};
 
@@ -42,7 +40,7 @@ int main()
         const auto now = std::chrono::high_resolution_clock::now();
         const auto time_step = now - last_time;
 
-        while (const std::optional event = window.pollEvent())
+        while (const std::optional<sf::Event> event = window.pollEvent())
         {
             if (event->is<sf::Event::Closed>())
                 window.close();

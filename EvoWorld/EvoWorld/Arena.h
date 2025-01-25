@@ -1,6 +1,5 @@
 #pragma once
 #include "CompoundShape.h"
-#include "Creature.h"
 #include "Glider.h"
 
 class Arena
