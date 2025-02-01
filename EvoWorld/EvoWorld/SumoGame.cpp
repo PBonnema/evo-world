@@ -28,6 +28,23 @@ const std::vector<std::shared_ptr<Glider>>& SumoGame::get_participants() const
     return participants_;
 }
 
+Vector2<double> SumoGame::calculate_friction(const Glider& glider, const std::chrono::duration<double>& time_step) const
+{
+    // The gravitational constant is implicitly set to 1
+    auto friction_magnitude = glider.get_mass() * coefficient_of_friction_;
+
+    // Scale the friction such that the impulse does not exceed the remaining momentum of the glider within this time step
+    const auto friction_impulse = friction_magnitude * time_step.count();
+    const auto speed = glider.get_velocity().get_length();
+    const auto remaining_momentum = speed * glider.get_mass();
+    if (friction_impulse > remaining_momentum)
+    {
+        friction_magnitude *= remaining_momentum / friction_impulse;
+    }
+
+    return glider.get_velocity() / (speed * -friction_magnitude);
+}
+
 void SumoGame::update(const std::chrono::duration<double>& time_step)
 {
     // Ask each creature for their next move (= preferred force)
@@ -41,22 +58,10 @@ void SumoGame::update(const std::chrono::duration<double>& time_step)
     {
         const Vector2<double> move_force = glider->next_sumo_move(get_participants(), max_force_magnitude_, coefficient_of_friction_);
 
-        // Assert the force magnitude is no more than the maximum force magnitude. Otherwise, next_sumo_move is bugged.
+        // Assert the move force magnitude is no more than the maximum force magnitude. Otherwise, next_sumo_move is bugged. No need to check at run time otherwise.
         assert(move_force.get_length() <= max_force_magnitude_ + 0.0001); // Allow for a bit of numerical error
 
-        // Apply friction
-        // The gravitational constant is implicitly set to 1
-        auto friction_magnitude = glider->get_mass() * coefficient_of_friction_;
-
-        // Scale the friction such that the impulse does not exceed the remaining momentum of the glider within this time step
-        const auto friction_impulse = friction_magnitude * time_step.count();
-        const auto speed = glider->get_velocity().get_length();
-        const auto remaining_momentum = speed * glider->get_mass();
-        if (friction_impulse > remaining_momentum)
-        {
-            friction_magnitude *= remaining_momentum / friction_impulse;
-        }
-        const auto friction = glider->get_velocity() / (speed * -friction_magnitude);
+        const auto friction = calculate_friction(*glider, time_step);
 
         // Sum up all forces and apply them
         const auto total_force = move_force + friction;
