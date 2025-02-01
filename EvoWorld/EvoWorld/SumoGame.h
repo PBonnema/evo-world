@@ -3,6 +3,7 @@
 
 #include <chrono>
 #include <random>
+#include <unordered_map>
 
 class SumoGame
 {
@@ -27,5 +28,6 @@ private:
     void add_new_participant();
     Vector2<double> calculate_friction(const Glider& glider, const std::chrono::duration<double>& time_step) const;
     void remove_outside_participants(std::vector<std::shared_ptr<Glider>>& participants) const;
+    static std::unordered_map<std::shared_ptr<Glider>, std::shared_ptr<Glider>> detect_collisions(const std::vector<std::shared_ptr<Glider>>& participants);
     static void resolve_collision(Glider& glider, Glider& other_glider);
 };

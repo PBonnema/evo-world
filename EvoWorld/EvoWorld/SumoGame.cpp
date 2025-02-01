@@ -75,6 +75,31 @@ void SumoGame::remove_outside_participants(std::vector<std::shared_ptr<Glider>>&
     }
 }
 
+std::unordered_map<std::shared_ptr<Glider>, std::shared_ptr<Glider>> SumoGame::detect_collisions(const std::vector<std::shared_ptr<Glider>>& participants)
+{
+    std::unordered_map<std::shared_ptr<Glider>, std::shared_ptr<Glider>> collisions;
+    for (const auto& glider : participants)
+    {
+        for (const auto& other_glider : participants)
+        {
+            // TODO don't register all collisions twice
+            if (glider == other_glider)
+            {
+                continue;
+            }
+
+            const auto distance_squared = glider->get_position().distance_squared(other_glider->get_position());
+            const auto radius_sum = glider->get_radius() + other_glider->get_radius();
+            if (distance_squared < radius_sum * radius_sum)
+            {
+                collisions[glider] = other_glider;
+            }
+        }
+    }
+
+    return collisions;
+}
+
 void SumoGame::resolve_collision(Glider& glider, Glider& other_glider)
 {
     // TODO bug: gliders can now merge when they hug each other with 0 relative velocity (due to friction)
@@ -128,31 +153,11 @@ void SumoGame::update(const std::chrono::duration<double>& time_step)
         glider->apply_impulse(total_force, time_step);
     }
 
-    // Collision detection
-    std::unordered_map<std::shared_ptr<Glider>, std::shared_ptr<Glider>> collisions;
-    for (const auto& glider : participants_)
-    {
-        for (const auto& other_glider : participants_)
-        {
-            // TODO don't register all collisions twice
-            if (glider == other_glider)
-            {
-                continue;
-            }
-
-            const auto distance_squared = glider->get_position().distance_squared(other_glider->get_position());
-            const auto radius_sum = glider->get_radius() + other_glider->get_radius();
-            if (distance_squared < radius_sum * radius_sum)
-            {
-                collisions[glider] = other_glider;
-            }
-        }
-    }
-
-    // Bounce the gliders by setting their velocity to the opposite direction
-    for (const auto& [glider, other_glider] : collisions)
+    // Collision handling
+    for (const auto& [glider, other_glider] : detect_collisions(participants_))
     {
         resolve_collision(*glider, *other_glider);
+        // TODO perfect this by playing time up until the first collision, resolve it, and continue time until the next collision, recursively
     }
 
     // Remove participants that are outside the arena
