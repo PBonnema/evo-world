@@ -15,7 +15,7 @@ public:
 
 private:
     const double max_force_magnitude_{500.0};
-    const double coefficient_of_friction_{0.0};
+    const double coefficient_of_friction_{100.0};
     const double participant_radius_{50.0};
     const double participant_mass_{1.0};
 
@@ -27,4 +27,5 @@ private:
     void add_new_participant();
     Vector2<double> calculate_friction(const Glider& glider, const std::chrono::duration<double>& time_step) const;
     void remove_outside_participants(std::vector<std::shared_ptr<Glider>>& participants) const;
+    static void resolve_collision(Glider& glider, Glider& other_glider);
 };

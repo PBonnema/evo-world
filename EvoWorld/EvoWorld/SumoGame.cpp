@@ -13,19 +13,18 @@ SumoGame::SumoGame(Arena arena, const size_t participant_count, const std::mt199
     max_participant_count_{participant_count},
     random_generator_{random_generator}
 {
-    // while (participants_.size() < max_participant_count_)
-    // {
-    //     add_new_participant();
-    // }
+    // TODO deal with participants spawning inside each other
+    while (participants_.size() < max_participant_count_)
+    {
+        add_new_participant();
+    }
 
-
-    // This length calculation ensures the distribution is uniform in the arena
-    participants_.emplace_back(std::make_unique<Glider>(Vector2{0.0, 0.0} + arena_.get_center() + Vector2<double>::from_polar(0.0, -450.0), participant_mass_, participant_radius_));
-    participants_.emplace_back(std::make_unique<Glider>(Vector2{0.0, 0.0} + arena_.get_center() + Vector2<double>::from_polar(0.0, -200.0 + participant_radius_ * 2), participant_mass_, participant_radius_));
-    participants_.emplace_back(std::make_unique<Glider>(Vector2{0.0, 0.0} + arena_.get_center() + Vector2<double>::from_polar(0.0, -200.0 + participant_radius_ * 4), participant_mass_, participant_radius_));
-    participants_.emplace_back(std::make_unique<Glider>(Vector2{0.0, 0.0} + arena_.get_center() + Vector2<double>::from_polar(0.0, -200.0 + participant_radius_ * 6), participant_mass_, participant_radius_));
-    participants_.emplace_back(std::make_unique<Glider>(Vector2{0.0, 0.0} + arena_.get_center() + Vector2<double>::from_polar(0.0, -200.0 + participant_radius_ * 8), participant_mass_, participant_radius_));
-    participants_[0]->apply_impulse({100.0, 0.0}, std::chrono::duration<double>{1.0});
+    // participants_.emplace_back(std::make_unique<Glider>(Vector2{0.0, 0.0} + arena_.get_center() + Vector2<double>::from_polar(0.0, -450.0), participant_mass_, participant_radius_));
+    // participants_.emplace_back(std::make_unique<Glider>(Vector2{0.0, 0.0} + arena_.get_center() + Vector2<double>::from_polar(0.0, -200.0 + participant_radius_ * 2), participant_mass_, participant_radius_));
+    // participants_.emplace_back(std::make_unique<Glider>(Vector2{0.0, 0.0} + arena_.get_center() + Vector2<double>::from_polar(0.0, -200.0 + participant_radius_ * 4), participant_mass_, participant_radius_));
+    // participants_.emplace_back(std::make_unique<Glider>(Vector2{0.0, 0.0} + arena_.get_center() + Vector2<double>::from_polar(0.0, -200.0 + participant_radius_ * 6), participant_mass_, participant_radius_));
+    // participants_.emplace_back(std::make_unique<Glider>(Vector2{0.0, 0.0} + arena_.get_center() + Vector2<double>::from_polar(0.0, -200.0 + participant_radius_ * 8), participant_mass_, participant_radius_));
+    // participants_[0]->apply_impulse({100.0, 0.0}, std::chrono::duration<double>{1.0});
 }
 
 const Arena& SumoGame::get_arena() const
@@ -73,6 +72,27 @@ void SumoGame::remove_outside_participants(std::vector<std::shared_ptr<Glider>>&
         {
             ++it;
         }
+    }
+}
+
+void SumoGame::resolve_collision(Glider& glider, Glider& other_glider)
+{
+    // TODO bug: gliders can now merge when they hug each other with 0 relative velocity (due to friction)
+    // TODO Move the gliders apart along the direction of their velocity so they don't overlap. The offset for both should be proportional to their velocity.
+
+    // Bounce as circles
+    const auto normal = (other_glider.get_position() - glider.get_position()).get_normalized();
+    const auto relative_velocity = other_glider.get_velocity() - glider.get_velocity();
+    const auto velocity_along_normal = relative_velocity.dot(normal);
+
+    if (velocity_along_normal <= 0.0)
+    {
+        constexpr auto e = 1.0; // Perfectly elastic collision
+        const auto impulse_magnitude = -(1.0 + e) * velocity_along_normal / (1.0 / glider.get_mass() + 1.0 / other_glider.get_mass());
+
+        const auto impulse = normal * impulse_magnitude;
+        glider.add_velocity(-impulse / glider.get_mass());
+        other_glider.add_velocity(impulse / other_glider.get_mass());
     }
 }
 
@@ -132,24 +152,7 @@ void SumoGame::update(const std::chrono::duration<double>& time_step)
     // Bounce the gliders by setting their velocity to the opposite direction
     for (const auto& [glider, other_glider] : collisions)
     {
-        // TODO Move the gliders apart along the direction of their velocity so they don't overlap. The offset for both should be proportional to their velocity.
-
-        // Bounce
-        const auto normal = (other_glider->get_position() - glider->get_position()).get_normalized();
-        const auto relative_velocity = other_glider->get_velocity() - glider->get_velocity();
-        const auto velocity_along_normal = relative_velocity.dot(normal);
-
-        if (velocity_along_normal > 0.0)
-        {
-            continue; // No collision if moving apart
-        }
-
-        constexpr auto e = 1.0; // Perfectly elastic collision
-        const auto impulse_magnitude = -(1.0 + e) * velocity_along_normal / (1.0 / glider->get_mass() + 1.0 / other_glider->get_mass());
-
-        const auto impulse = normal * impulse_magnitude;
-        glider->add_velocity(-impulse / glider->get_mass());
-        other_glider->add_velocity(impulse / other_glider->get_mass());
+        resolve_collision(*glider, *other_glider);
     }
 
     // Remove participants that are outside the arena
@@ -157,10 +160,10 @@ void SumoGame::update(const std::chrono::duration<double>& time_step)
 
     // Add new participants if there are less than the desired number of participants
     // TODO deal with participants spawning inside each other
-    // while (participants_.size() < max_participant_count_)
-    // {
-    //     add_new_participant();
-    // }
+    while (participants_.size() < max_participant_count_)
+    {
+        add_new_participant();
+    }
 }
 
 void SumoGame::add_new_participant()

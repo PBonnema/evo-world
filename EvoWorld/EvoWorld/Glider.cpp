@@ -70,7 +70,7 @@ void Glider::apply_impulse(const Vector2<double>& force, const std::chrono::dura
 Vector2<double> Glider::next_sumo_move(const std::vector<std::shared_ptr<Glider>>& all_gliders, double max_force_magnitude,
     double coefficient_of_friction) const
 {
-    return {};
+    // return {};
     // Move full force to the nearest opponent
     Vector2<double> nearest_opponent_position;
     auto nearest_opponent_distance = std::numeric_limits<double>::max();
