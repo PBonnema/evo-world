@@ -54,29 +54,3 @@ void Glider::apply_impulse(const Vector2<double>& force, const std::chrono::dura
     position_ += velocity_ * time_step.count();
     shape_.setPosition({static_cast<float>(position_.get_x()), static_cast<float>(position_.get_y())});
 }
-
-Vector2<double> Glider::next_sumo_move(std::ranges::input_range auto&& all_gliders, const double max_force_magnitude,
-                                       double coefficient_of_friction) const
-    requires std::is_same_v<std::ranges::range_value_t<decltype(all_gliders)>, const Glider*>
-{
-    // Move full force to the nearest opponent
-    Vector2<double> nearest_opponent_position;
-    auto nearest_opponent_distance = std::numeric_limits<double>::max();
-    for (const Glider* other_glider : all_gliders)
-    {
-        if (other_glider == this)
-        {
-            continue;
-        }
-
-        const auto distance = (other_glider->get_position() - position_).get_length();
-        if (distance < nearest_opponent_distance)
-        {
-            nearest_opponent_distance = distance;
-            nearest_opponent_position = other_glider->get_position();
-        }
-    }
-
-    const auto force = (nearest_opponent_position - position_).get_normalized() * max_force_magnitude;
-    return force;
-}

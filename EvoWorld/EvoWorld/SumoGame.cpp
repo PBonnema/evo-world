@@ -23,11 +23,6 @@ const Arena& SumoGame::get_arena() const
     return arena_;
 }
 
-std::span<const std::unique_ptr<Glider>> SumoGame::get_participants() const
-{
-    return participants_;
-}
-
 void SumoGame::update(const std::chrono::duration<double>& time_step)
 {
     // Ask each creature for their next move (= preferred force)
@@ -37,9 +32,9 @@ void SumoGame::update(const std::chrono::duration<double>& time_step)
     // update positions of creatures using the position of gliders
     // if a creature is outside the arena, remove it
 
-    for (const std::unique_ptr<Glider>& glider : participants_)
+    for (const auto& glider : participants_)
     {
-        const Vector2<double> move_force = glider->next_sumo_move(participants_ | std::views::transform([](const auto& p) { return static_cast<const Glider*>(p.get()); }), max_force_magnitude_, coefficient_of_friction_);
+        const Vector2<double> move_force = glider->next_sumo_move(get_participants(), max_force_magnitude_, coefficient_of_friction_);
 
         // Assert the force magnitude is no more than the maximum force magnitude. Otherwise, next_sumo_move is bugged.
         assert(move_force.get_length() <= max_force_magnitude_ + 0.0001); // Allow for a bit of numerical error

@@ -10,7 +10,10 @@ public:
     explicit SumoGame(Arena arena, size_t participant_count, const std::mt19937& random_generator);
 
     [[nodiscard]] const Arena& get_arena() const;
-    [[nodiscard]] std::span<const std::unique_ptr<Glider>> get_participants() const;
+    [[nodiscard]] std::ranges::view auto get_participants() const
+    {
+        return participants_ | std::views::transform([](auto&& p) { return p.get(); });
+    }
     void update(const std::chrono::duration<double>& time_step);
 
 private:
@@ -19,8 +22,8 @@ private:
     const double participant_radius_{50.0};
     const double participant_mass_{1.0};
 
-    const Arena arena_;
-    std::vector<std::unique_ptr<Glider>> participants_;
+    Arena arena_;
+    std::vector<std::shared_ptr<Glider>> participants_;
     const size_t max_participant_count_;
     std::mt19937 random_generator_;
 
