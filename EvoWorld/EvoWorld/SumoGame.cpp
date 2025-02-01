@@ -1,15 +1,14 @@
 #include "SumoGame.h"
-#include "Glider.h"
 #include "Vector2.h"
-#include "PlayerGlider.h"
+#include "SumoGliders/PlayerGlider.h"
+#include "SumoGliders/Glider.h"
+#include "SumoGliders/RushGlider.h"
 
 #include <chrono>
 #include <numbers>
 #include <random>
 #include <ranges>
 #include <unordered_map>
-
-#include "RushGlider.h"
 
 SumoGame::SumoGame(const std::mt19937& random_generator, Arena arena, const size_t participant_count,
                    const std::vector<std::shared_ptr<Glider>>& initial_participants, const double max_acceleration,

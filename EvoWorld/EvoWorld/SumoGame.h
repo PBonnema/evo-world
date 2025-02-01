@@ -1,5 +1,6 @@
 #pragma once
 #include "Arena.h"
+#include "SumoGliders/Glider.h"
 
 #include <chrono>
 #include <random>

@@ -1,6 +1,6 @@
 #include "Arena.h"
 #include "SumoGame.h"
-#include "PlayerGlider.h"
+#include "SumoGliders/PlayerGlider.h"
 
 #include <SFML/Graphics.hpp>
 #include <iostream>
