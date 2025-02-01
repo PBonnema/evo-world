@@ -31,19 +31,25 @@ const std::vector<std::shared_ptr<Glider>>& SumoGame::get_participants() const
 
 Vector2<double> SumoGame::calculate_friction(const Glider& glider, const std::chrono::duration<double>& time_step) const
 {
+    const auto speed = glider.get_velocity().get_length();
+    if (speed == 0.0)
+    {
+        return {0.0, 0.0};
+    }
+
     // The gravitational constant is implicitly set to 1
     auto friction_magnitude = glider.get_mass() * coefficient_of_friction_;
 
     // Scale the friction such that the impulse does not exceed the remaining momentum of the glider within this time step
+    // This prevents the glider from moving backwards. It can come to a full stop.
     const auto friction_impulse = friction_magnitude * time_step.count();
-    const auto speed = glider.get_velocity().get_length();
     const auto remaining_momentum = speed * glider.get_mass();
     if (friction_impulse > remaining_momentum)
     {
         friction_magnitude *= remaining_momentum / friction_impulse;
     }
 
-    return glider.get_velocity() / (speed * -friction_magnitude);
+    return glider.get_velocity() / (speed / -friction_magnitude);
 }
 
 void SumoGame::remove_outside_participants(std::vector<std::shared_ptr<Glider>>& participants) const
