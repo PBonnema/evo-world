@@ -1,7 +1,7 @@
 #include "SumoGame.h"
 #include "Vector2.h"
-#include "SumoGliders/PlayerGlider.h"
 #include "SumoGliders/Glider.h"
+#include "SumoGliders/PlayerGlider.h"
 #include "SumoGliders/RushGlider.h"
 
 #include <chrono>
@@ -69,21 +69,6 @@ Vector2<double> SumoGame::calculate_friction(const Glider& glider, const std::ch
     return glider.get_velocity() / (speed / -friction_magnitude);
 }
 
-void SumoGame::remove_outside_participants(std::vector<std::shared_ptr<Glider>>& participants) const
-{
-    for (auto it = participants.begin(); it != participants.end();)
-    {
-        if (!arena_.contains((*it)->get_position()))
-        {
-            it = participants.erase(it);
-        }
-        else
-        {
-            ++it;
-        }
-    }
-}
-
 std::unordered_map<std::shared_ptr<Glider>, std::shared_ptr<Glider>> SumoGame::detect_collisions(
     const std::vector<std::shared_ptr<Glider>>& participants)
 {
@@ -124,6 +109,13 @@ void SumoGame::resolve_collision(Glider& glider, Glider& other_glider)
         glider.add_velocity(-impulse / glider.get_mass());
         other_glider.add_velocity(impulse / other_glider.get_mass());
     }
+}
+
+void SumoGame::remove_outside_participants(std::vector<std::shared_ptr<Glider>>& participants) const
+{
+    std::erase_if(participants, [this](const auto& glider) {
+        return !arena_.contains(glider->get_position());
+    });
 }
 
 void SumoGame::add_new_participant()

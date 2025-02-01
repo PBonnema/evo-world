@@ -1,14 +1,17 @@
 #include "RushGlider.h"
 
+#include <SFML/Graphics/CircleShape.hpp>
+
 RushGlider::RushGlider(const Vector2<double>& position, double mass, double radius) :
     Glider{position, mass, radius}
 {
+    auto& circle = *dynamic_cast<sf::CircleShape*>(get_shape().get_drawables()[0].get());
+    circle.setFillColor(sf::Color::Red);
 }
 
 Vector2<double> RushGlider::next_sumo_move(const std::vector<std::shared_ptr<Glider>>& all_gliders, double max_acceleration,
     double coefficient_of_friction) const
 {
-    // return {};
     // Move full force to the nearest opponent
     Vector2<double> nearest_opponent_position;
     auto nearest_opponent_distance = std::numeric_limits<double>::max();
