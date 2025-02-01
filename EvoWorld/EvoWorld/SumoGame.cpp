@@ -72,7 +72,7 @@ void SumoGame::update(const std::chrono::duration<double>& time_step)
     // update positions of creatures using the position of gliders
     // if a creature is outside the arena, remove it
 
-    // TODO call next_sumo_move on a regular interval instead of every frame and remember the last move
+    // TODO detach game loop from rendering loop
     // TODO implement collision detection and make creatures bounce
 
     std::unordered_map<std::shared_ptr<Glider>, Vector2<double>> moves;
