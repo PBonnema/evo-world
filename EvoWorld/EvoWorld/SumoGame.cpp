@@ -9,6 +9,8 @@
 #include <ranges>
 #include <unordered_map>
 
+#include "RushGlider.h"
+
 SumoGame::SumoGame(const std::mt19937& random_generator, Arena arena, const size_t participant_count,
                    const std::vector<std::shared_ptr<Glider>>& initial_participants, const double max_acceleration,
                    const double coefficient_of_friction, const double participant_radius, const double participant_mass) :
@@ -136,7 +138,7 @@ void SumoGame::add_new_participant()
     const auto distance_from_center = arena_.get_radius() * std::sqrt(polar_length_distribution(random_generator_));
     const auto position = arena_.get_center() + Vector2<double>::from_polar(angle, distance_from_center);
 
-    participants_.emplace_back(std::make_unique<Glider>(position, participant_mass_, participant_radius_));
+    participants_.emplace_back(std::make_unique<RushGlider>(position, participant_mass_, participant_radius_));
 }
 
 void SumoGame::update(const std::chrono::duration<double>& time_step)

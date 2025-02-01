@@ -19,12 +19,14 @@ public:
     void add_velocity(const Vector2<double>& velocity);
     void apply_impulse(const Vector2<double>& force, const std::chrono::duration<double>& time_step);
     [[nodiscard]] virtual Vector2<double> next_sumo_move(const std::vector<std::shared_ptr<Glider>>& all_gliders, double max_acceleration,
-                                                 double coefficient_of_friction) const;
+                                                 double coefficient_of_friction) const = 0;
+
+protected:
+    const double mass_;
+    const double radius_;
 
 private:
     CompoundShape shape_; // Class invariant: position of shape_ is equal to position_. It is the center of shape_
     Vector2<double> position_;
     Vector2<double> velocity_;
-    double mass_;
-    double radius_;
 };

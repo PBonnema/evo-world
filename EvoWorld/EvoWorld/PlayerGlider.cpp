@@ -19,5 +19,5 @@ Vector2<double> PlayerGlider::next_sumo_move(const std::vector<std::shared_ptr<G
     const Vector2<double> mouse_position{static_cast<double>(raw_mouse_position.x), static_cast<double>(raw_mouse_position.y)};
 
     // Calculate the force vector towards the mouse position
-    return (mouse_position - get_position()).get_normalized() * max_acceleration * get_mass();
+    return (mouse_position - get_position()).get_normalized() * max_acceleration * mass_;
 }
