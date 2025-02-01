@@ -20,10 +20,12 @@ SumoGame::SumoGame(Arena arena, const size_t participant_count, const std::mt199
 
 
     // This length calculation ensures the distribution is uniform in the arena
-    participants_.emplace_back(std::make_unique<Glider>(Vector2{0.0, 0.0} + arena_.get_center() + Vector2<double>::from_polar(0.0, -400.0), participant_mass_, participant_radius_));
+    participants_.emplace_back(std::make_unique<Glider>(Vector2{0.0, 0.0} + arena_.get_center() + Vector2<double>::from_polar(0.0, -450.0), participant_mass_, participant_radius_));
+    participants_.emplace_back(std::make_unique<Glider>(Vector2{0.0, 0.0} + arena_.get_center() + Vector2<double>::from_polar(0.0, -200.0 + participant_radius_ * 2), participant_mass_, participant_radius_));
+    participants_.emplace_back(std::make_unique<Glider>(Vector2{0.0, 0.0} + arena_.get_center() + Vector2<double>::from_polar(0.0, -200.0 + participant_radius_ * 4), participant_mass_, participant_radius_));
+    participants_.emplace_back(std::make_unique<Glider>(Vector2{0.0, 0.0} + arena_.get_center() + Vector2<double>::from_polar(0.0, -200.0 + participant_radius_ * 6), participant_mass_, participant_radius_));
+    participants_.emplace_back(std::make_unique<Glider>(Vector2{0.0, 0.0} + arena_.get_center() + Vector2<double>::from_polar(0.0, -200.0 + participant_radius_ * 8), participant_mass_, participant_radius_));
     participants_[0]->apply_impulse({100.0, 0.0}, std::chrono::duration<double>{1.0});
-    participants_.emplace_back(std::make_unique<Glider>(Vector2{0.0, 0.0} + arena_.get_center() + Vector2<double>::from_polar(0.0, 400.0), participant_mass_, participant_radius_));
-    participants_[1]->apply_impulse({-100.0, 0.0}, std::chrono::duration<double>{1.0});
 }
 
 const Arena& SumoGame::get_arena() const
