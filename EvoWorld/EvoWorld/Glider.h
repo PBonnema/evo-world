@@ -7,6 +7,7 @@ class Glider
 {
 public:
     Glider(const Vector2<double>& position, double mass, double radius);
+    virtual ~Glider() = default;
 
     [[nodiscard]] const CompoundShape& get_shape() const;
     [[nodiscard]] CompoundShape& get_shape();
@@ -17,7 +18,7 @@ public:
     void add_position(const Vector2<double>& position);
     void add_velocity(const Vector2<double>& velocity);
     void apply_impulse(const Vector2<double>& force, const std::chrono::duration<double>& time_step);
-    [[nodiscard]] Vector2<double> next_sumo_move(const std::vector<std::shared_ptr<Glider>>& all_gliders, double max_force_magnitude,
+    [[nodiscard]] virtual Vector2<double> next_sumo_move(const std::vector<std::shared_ptr<Glider>>& all_gliders, double max_acceleration,
                                                  double coefficient_of_friction) const;
 
 private:

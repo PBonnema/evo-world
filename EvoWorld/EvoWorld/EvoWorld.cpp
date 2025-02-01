@@ -1,10 +1,13 @@
 #include "Arena.h"
 #include "SumoGame.h"
+#include "PlayerGlider.h"
+
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <random>
 
-namespace {
+namespace
+{
     void draw_sumo_game(sf::RenderWindow& window, const Arena& arena, const SumoGame& sumo_game)
     {
         window.clear();
@@ -12,9 +15,9 @@ namespace {
         window.draw(arena.get_shape());
 
         // Draw all creatures from the sumo game
-        for (const std::shared_ptr<Glider>& creature : sumo_game.get_participants())
+        for (const std::shared_ptr<Glider>& participant : sumo_game.get_participants())
         {
-            window.draw(creature->get_shape());
+            window.draw(participant->get_shape());
         }
 
         window.display();
@@ -30,9 +33,11 @@ int main()
     // Print the seed to the console so that we can reproduce the same results.
     std::cout << "Seed: " << seed << '\n';
 
-    const Arena arena{{500.0, 500.0}, 500.0};
-    SumoGame sumo_game{arena, 3, random_generator};
     sf::RenderWindow window{sf::VideoMode{{1000, 1000}}, "Evo World"};
+
+    const Arena arena{{500.0, 500.0}, 500.0};
+    const auto player_glider = std::make_shared<PlayerGlider>(arena.get_center(), 1.0, 80.0, window);
+    SumoGame sumo_game{random_generator, arena, 3, {player_glider}, 500.0, 100, 80.0, 1.0};
 
     auto last_time = std::chrono::high_resolution_clock::now();
     while (window.isOpen())

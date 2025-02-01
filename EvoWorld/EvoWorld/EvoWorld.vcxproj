@@ -147,6 +147,7 @@
     <ClCompile Include="CompoundShape.cpp" />
     <ClCompile Include="EvoWorld.cpp" />
     <ClCompile Include="Glider.cpp" />
+    <ClCompile Include="PlayerGlider.cpp" />
     <ClCompile Include="SumoGame.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -154,6 +155,7 @@
     <ClInclude Include="CompoundShape.h" />
     <ClInclude Include="fwd_decl.h" />
     <ClInclude Include="Glider.h" />
+    <ClInclude Include="PlayerGlider.h" />
     <ClInclude Include="SumoGame.h" />
     <ClInclude Include="Vector2.h" />
   </ItemGroup>

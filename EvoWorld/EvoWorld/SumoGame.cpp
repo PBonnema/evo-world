@@ -1,6 +1,7 @@
 #include "SumoGame.h"
 #include "Glider.h"
 #include "Vector2.h"
+#include "PlayerGlider.h"
 
 #include <chrono>
 #include <numbers>
@@ -8,8 +9,15 @@
 #include <ranges>
 #include <unordered_map>
 
-SumoGame::SumoGame(Arena arena, const size_t participant_count, const std::mt19937& random_generator) :
+SumoGame::SumoGame(const std::mt19937& random_generator, Arena arena, const size_t participant_count,
+                   const std::vector<std::shared_ptr<Glider>>& initial_participants, const double max_acceleration,
+                   const double coefficient_of_friction, const double participant_radius, const double participant_mass) :
+    max_acceleration_{max_acceleration},
+    coefficient_of_friction_{coefficient_of_friction},
+    participant_radius_{participant_radius},
+    participant_mass_{participant_mass},
     arena_{std::move(arena)},
+    participants_{initial_participants},
     max_participant_count_{participant_count},
     random_generator_{random_generator}
 {
@@ -75,7 +83,8 @@ void SumoGame::remove_outside_participants(std::vector<std::shared_ptr<Glider>>&
     }
 }
 
-std::unordered_map<std::shared_ptr<Glider>, std::shared_ptr<Glider>> SumoGame::detect_collisions(const std::vector<std::shared_ptr<Glider>>& participants)
+std::unordered_map<std::shared_ptr<Glider>, std::shared_ptr<Glider>> SumoGame::detect_collisions(
+    const std::vector<std::shared_ptr<Glider>>& participants)
 {
     std::unordered_map<std::shared_ptr<Glider>, std::shared_ptr<Glider>> collisions;
     // Don't detect collisions between the same glider twice
@@ -116,6 +125,20 @@ void SumoGame::resolve_collision(Glider& glider, Glider& other_glider)
     }
 }
 
+void SumoGame::add_new_participant()
+{
+    // Create creature at a uniform, random position within the circular arena
+    std::uniform_real_distribution polar_angle_distribution{0.0, std::numbers::pi * 2};
+    std::uniform_real_distribution polar_length_distribution{0.0, 1.0};
+
+    const auto angle = polar_angle_distribution(random_generator_);
+    // This length calculation ensures the distribution is uniform in the arena
+    const auto distance_from_center = arena_.get_radius() * std::sqrt(polar_length_distribution(random_generator_));
+    const auto position = arena_.get_center() + Vector2<double>::from_polar(angle, distance_from_center);
+
+    participants_.emplace_back(std::make_unique<Glider>(position, participant_mass_, participant_radius_));
+}
+
 void SumoGame::update(const std::chrono::duration<double>& time_step)
 {
     // Ask each creature for their next move (= preferred force)
@@ -126,15 +149,15 @@ void SumoGame::update(const std::chrono::duration<double>& time_step)
     // if a creature is outside the arena, remove it
 
     // TODO detach game loop from rendering loop
-    // TODO implement collision detection and make creatures bounce
 
     std::unordered_map<std::shared_ptr<Glider>, Vector2<double>> moves;
     for (const auto& glider : participants_)
     {
-        const Vector2<double> move_force = glider->next_sumo_move(get_participants(), max_force_magnitude_, coefficient_of_friction_);
+        const Vector2<double> move_force = glider->next_sumo_move(get_participants(), max_acceleration_, coefficient_of_friction_);
 
-        // Assert the move force magnitude is no more than the maximum force magnitude. Otherwise, next_sumo_move is bugged. No need to check at run time otherwise.
-        assert(move_force.get_length_squared() <= max_force_magnitude_ * max_force_magnitude_ + 0.0001); // Allow for a bit of numerical error
+        // Assert the move force magnitude is no more than the maximum force magnitude (which is maximum acceleration times mass).
+        // Otherwise, next_sumo_move is bugged. No need to check at run time otherwise. Allow for a bit of numerical error
+        assert(move_force.get_length() <= glider->get_mass() * max_acceleration_ + 0.0001);
 
         moves[glider] = move_force;
     }
@@ -164,18 +187,4 @@ void SumoGame::update(const std::chrono::duration<double>& time_step)
     {
         add_new_participant();
     }
-}
-
-void SumoGame::add_new_participant()
-{
-    // Create creature at a uniform, random position within the circular arena
-    std::uniform_real_distribution polar_angle_distribution{0.0, std::numbers::pi * 2};
-    std::uniform_real_distribution polar_length_distribution{0.0, 1.0};
-
-    const auto angle = polar_angle_distribution(random_generator_);
-    // This length calculation ensures the distribution is uniform in the arena
-    const auto distance_from_center = arena_.get_radius() * std::sqrt(polar_length_distribution(random_generator_));
-    const auto position = arena_.get_center() + Vector2<double>::from_polar(angle, distance_from_center);
-
-    participants_.emplace_back(std::make_unique<Glider>(position, participant_mass_, participant_radius_));
 }
