@@ -26,6 +26,11 @@ public:
         return lhs << '(' << rhs.x_ << ", " << rhs.y_ << ')';
     }
 
+    [[nodiscard]] constexpr Vector2 operator-() const
+    {
+        return {-x_, -y_};
+    }
+
     [[nodiscard]] constexpr Vector2 operator+(const Vector2& other) const
     {
         return {x_ + other.x_, y_ + other.y_};
@@ -192,54 +197,56 @@ public:
         return *this;
     }
 
-    [[nodiscard]] constexpr static double distance(const Vector2& v1, const Vector2& v2)
+    [[nodiscard]] constexpr double distance(const Vector2& other) const
     {
-        return (v1 - v2).get_length();
+        return (*this - other).get_length();
     }
 
-    [[nodiscard]] constexpr static double distance_squared(const Vector2& v1, const Vector2& v2)
+    [[nodiscard]] constexpr double distance_squared(const Vector2& other) const
     {
-        return (v1 - v2).get_length_squared();
+        return (*this - other).get_length_squared();
     }
+
+    [[nodiscard]] constexpr double angle(const Vector2& other) const
+    {
+        return std::atan2(other.y_, other.x_) - std::atan2(this->y_, this->x_);
+    }
+
+    [[nodiscard]] constexpr double angle_between(const Vector2& other) const
+    {
+        return std::acos(std::clamp(this->dot(other), -1.0, 1.0));
+    }
+
+    [[nodiscard]] constexpr double signed_angle(const Vector2& other) const
+    {
+        return std::atan2(other.y_, other.x_) - std::atan2(this->y_, this->x_);
+    }
+
+    [[nodiscard]] constexpr double signed_angle_between(const Vector2& other) const
+    {
+        return std::acos(std::clamp(this->dot(other), -1.0, 1.0));
+    }
+
+    [[nodiscard]] constexpr double cross_product(const Vector2& other) const
+    {
+        return this->x_ * other.y_ - this->y_ * other.x_;
+    }
+
+    // Static
 
     [[nodiscard]] constexpr static Vector2 lerp(const Vector2& v1, const Vector2& v2, double t)
     {
         return v1 + (v2 - v1) * t;
     }
 
-    [[nodiscard]] constexpr static Vector2 from_polar(const double angle, const double length = 1.0)
+    [[nodiscard]] constexpr static Vector2 from_polar(const double angle, const double r = 1.0)
     {
-        return {std::cos(angle) * length, std::sin(angle) * length};
+        return {std::cos(angle) * r, std::sin(angle) * r};
     }
 
     [[nodiscard]] constexpr static Vector2 from_polar(const Vector2& v)
     {
         return from_polar(v.x_, v.y_);
-    }
-
-    [[nodiscard]] constexpr static double angle(const Vector2& v1, const Vector2& v2)
-    {
-        return std::atan2(v2.y_, v2.x_) - std::atan2(v1.y_, v1.x_);
-    }
-
-    [[nodiscard]] constexpr static double angle_between(const Vector2& v1, const Vector2& v2)
-    {
-        return std::acos(std::clamp(v1.dot(v2), -1.0, 1.0));
-    }
-
-    [[nodiscard]] constexpr static double signed_angle(const Vector2& v1, const Vector2& v2)
-    {
-        return std::atan2(v2.y_, v2.x_) - std::atan2(v1.y_, v1.x_);
-    }
-
-    [[nodiscard]] constexpr static double signed_angle_between(const Vector2& v1, const Vector2& v2)
-    {
-        return std::acos(std::clamp(v1.dot(v2), -1.0, 1.0));
-    }
-
-    [[nodiscard]] constexpr static double cross_product(const Vector2& v1, const Vector2& v2)
-    {
-        return v1.x_ * v2.y_ - v1.y_ * v2.x_;
     }
 
     [[nodiscard]] constexpr static Vector2 min(const Vector2& v1, const Vector2& v2)

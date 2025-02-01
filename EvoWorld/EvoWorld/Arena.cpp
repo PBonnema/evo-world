@@ -23,5 +23,5 @@ CompoundShape& Arena::get_shape()
 
 bool Arena::contains(const Vector2<double>& point) const
 {
-    return Vector2<double>::distance(center_, point) <= radius_;
+    return center_.distance(point) <= radius_;
 }

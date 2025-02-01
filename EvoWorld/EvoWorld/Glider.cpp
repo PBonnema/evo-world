@@ -45,6 +45,17 @@ double Glider::get_radius() const
     return radius_;
 }
 
+void Glider::add_position(const Vector2<double>& position)
+{
+    position_ += position;
+    shape_.setPosition({static_cast<float>(position_.get_x()), static_cast<float>(position_.get_y())});
+}
+
+void Glider::add_velocity(const Vector2<double>& velocity)
+{
+    velocity_ += velocity;
+}
+
 void Glider::apply_impulse(const Vector2<double>& force, const std::chrono::duration<double>& time_step)
 {
     const auto acceleration = force / mass_;
@@ -58,6 +69,7 @@ void Glider::apply_impulse(const Vector2<double>& force, const std::chrono::dura
 Vector2<double> Glider::next_sumo_move(const std::vector<std::shared_ptr<Glider>>& all_gliders, double max_force_magnitude,
     double coefficient_of_friction) const
 {
+    return {};
     // Move full force to the nearest opponent
     Vector2<double> nearest_opponent_position;
     auto nearest_opponent_distance = std::numeric_limits<double>::max();
