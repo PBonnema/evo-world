@@ -26,4 +26,5 @@ private:
 
     void add_new_participant();
     Vector2<double> calculate_friction(const Glider& glider, const std::chrono::duration<double>& time_step) const;
+    void remove_outside_participants(std::vector<std::shared_ptr<Glider>>& participants) const;
 };

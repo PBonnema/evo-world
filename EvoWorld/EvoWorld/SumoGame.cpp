@@ -6,6 +6,7 @@
 #include <numbers>
 #include <random>
 #include <ranges>
+#include <unordered_map>
 
 SumoGame::SumoGame(Arena arena, const size_t participant_count, const std::mt19937& random_generator) :
     arena_{std::move(arena)},
@@ -45,6 +46,23 @@ Vector2<double> SumoGame::calculate_friction(const Glider& glider, const std::ch
     return glider.get_velocity() / (speed * -friction_magnitude);
 }
 
+void SumoGame::remove_outside_participants(std::vector<std::shared_ptr<Glider>>& participants) const
+{
+    for (auto it = participants.begin(); it != participants.end();)
+    {
+        const Glider& glider = **it;
+        const auto participant_center = glider.get_position() + Vector2{glider.get_radius(), glider.get_radius()};
+        if (!arena_.contains(participant_center))
+        {
+            it = participants.erase(it);
+        }
+        else
+        {
+            ++it;
+        }
+    }
+}
+
 void SumoGame::update(const std::chrono::duration<double>& time_step)
 {
     // Ask each creature for their next move (= preferred force)
@@ -54,6 +72,7 @@ void SumoGame::update(const std::chrono::duration<double>& time_step)
     // update positions of creatures using the position of gliders
     // if a creature is outside the arena, remove it
 
+    std::unordered_map<std::shared_ptr<Glider>, Vector2<double>> moves;
     for (const auto& glider : participants_)
     {
         const Vector2<double> move_force = glider->next_sumo_move(get_participants(), max_force_magnitude_, coefficient_of_friction_);
@@ -61,6 +80,11 @@ void SumoGame::update(const std::chrono::duration<double>& time_step)
         // Assert the move force magnitude is no more than the maximum force magnitude. Otherwise, next_sumo_move is bugged. No need to check at run time otherwise.
         assert(move_force.get_length() <= max_force_magnitude_ + 0.0001); // Allow for a bit of numerical error
 
+        moves[glider] = move_force;
+    }
+
+    for (const auto& [glider, move_force] : moves)
+    {
         const auto friction = calculate_friction(*glider, time_step);
 
         // Sum up all forces and apply them
@@ -73,19 +97,7 @@ void SumoGame::update(const std::chrono::duration<double>& time_step)
     // TODO implement collision detection and make creatures bounce
 
     // Remove participants that are outside the arena
-    for (auto it = participants_.begin(); it != participants_.end();)
-    {
-        const Glider& glider = **it;
-        const auto participant_center = glider.get_position() + Vector2{glider.get_radius(), glider.get_radius()};
-        if (!arena_.contains(participant_center))
-        {
-            it = participants_.erase(it);
-        }
-        else
-        {
-            ++it;
-        }
-    }
+    remove_outside_participants(participants_);
 
     // Add new participants if there are less than the desired number of participants
     while (participants_.size() < max_participant_count_)
