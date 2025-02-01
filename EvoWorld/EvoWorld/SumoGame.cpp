@@ -23,6 +23,11 @@ const Arena& SumoGame::get_arena() const
     return arena_;
 }
 
+const std::vector<std::shared_ptr<Glider>>& SumoGame::get_participants() const
+{
+    return participants_;
+}
+
 void SumoGame::update(const std::chrono::duration<double>& time_step)
 {
     // Ask each creature for their next move (= preferred force)

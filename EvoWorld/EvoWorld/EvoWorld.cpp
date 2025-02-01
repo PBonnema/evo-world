@@ -12,7 +12,7 @@ namespace {
         window.draw(arena.get_shape());
 
         // Draw all creatures from the sumo game
-        for (const Glider* creature : sumo_game.get_participants())
+        for (const std::shared_ptr<Glider>& creature : sumo_game.get_participants())
         {
             window.draw(creature->get_shape());
         }

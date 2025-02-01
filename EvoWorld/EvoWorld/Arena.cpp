@@ -7,7 +7,7 @@ Arena::Arena(const Vector2<double>& center, const double radius) :
     radius_{radius},
     shape_{{std::make_unique<sf::CircleShape>(static_cast<float>(radius), 100)}}
 {
-    auto& circle = *dynamic_cast<sf::CircleShape*>(shape_.get_drawables()[0]);
+    auto& circle = *dynamic_cast<sf::CircleShape*>(shape_.get_drawables()[0].get());
     circle.setFillColor(sf::Color::Blue);
 }
 
