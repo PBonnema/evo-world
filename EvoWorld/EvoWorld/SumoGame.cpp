@@ -78,21 +78,16 @@ void SumoGame::remove_outside_participants(std::vector<std::shared_ptr<Glider>>&
 std::unordered_map<std::shared_ptr<Glider>, std::shared_ptr<Glider>> SumoGame::detect_collisions(const std::vector<std::shared_ptr<Glider>>& participants)
 {
     std::unordered_map<std::shared_ptr<Glider>, std::shared_ptr<Glider>> collisions;
-    for (const auto& glider : participants)
+    // Don't detect collisions between the same glider twice
+    for (auto it = participants.begin(); it != participants.end(); ++it)
     {
-        for (const auto& other_glider : participants)
+        for (auto other_it = std::next(it); other_it != participants.end(); ++other_it)
         {
-            // TODO don't register all collisions twice
-            if (glider == other_glider)
-            {
-                continue;
-            }
-
-            const auto distance_squared = glider->get_position().distance_squared(other_glider->get_position());
-            const auto radius_sum = glider->get_radius() + other_glider->get_radius();
+            const auto distance_squared = (*it)->get_position().distance_squared((*other_it)->get_position());
+            const auto radius_sum = (*it)->get_radius() + (*other_it)->get_radius();
             if (distance_squared < radius_sum * radius_sum)
             {
-                collisions[glider] = other_glider;
+                collisions[*it] = *other_it;
             }
         }
     }
