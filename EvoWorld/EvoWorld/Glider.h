@@ -21,7 +21,7 @@ public:
                                                  double coefficient_of_friction) const;
 
 private:
-    CompoundShape shape_; // Class invariant: position of shape_ is equal to position_
+    CompoundShape shape_; // Class invariant: position of shape_ is equal to position_. It is the center of shape_
     Vector2<double> position_;
     Vector2<double> velocity_;
     double mass_;

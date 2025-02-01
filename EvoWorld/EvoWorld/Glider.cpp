@@ -12,6 +12,7 @@ Glider::Glider(const Vector2<double>& position, const double mass, const double 
     auto& circle = *dynamic_cast<sf::CircleShape*>(shape_.get_drawables()[0].get());
     circle.setFillColor(sf::Color::Red);
 
+    shape_.setOrigin(sf::Vector2f{static_cast<float>(radius), static_cast<float>(radius)});
     shape_.setPosition({static_cast<float>(position_.get_x()), static_cast<float>(position_.get_y())});
 }
 

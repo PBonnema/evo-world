@@ -20,9 +20,10 @@ SumoGame::SumoGame(Arena arena, const size_t participant_count, const std::mt199
 
 
     // This length calculation ensures the distribution is uniform in the arena
-    participants_.emplace_back(std::make_unique<Glider>(Vector2{0.0, -participant_radius_ / 2.0} + arena_.get_center() + Vector2<double>::from_polar(0.0, -500.0), participant_mass_, participant_radius_));
+    participants_.emplace_back(std::make_unique<Glider>(Vector2{0.0, 0.0} + arena_.get_center() + Vector2<double>::from_polar(0.0, -400.0), participant_mass_, participant_radius_));
     participants_[0]->apply_impulse({100.0, 0.0}, std::chrono::duration<double>{1.0});
-    participants_.emplace_back(std::make_unique<Glider>(Vector2{0.0, -participant_radius_ / 2.0} + arena_.get_center() + Vector2<double>::from_polar(0.0, 000.0), participant_mass_, participant_radius_));
+    participants_.emplace_back(std::make_unique<Glider>(Vector2{0.0, 0.0} + arena_.get_center() + Vector2<double>::from_polar(0.0, 400.0), participant_mass_, participant_radius_));
+    participants_[1]->apply_impulse({-100.0, 0.0}, std::chrono::duration<double>{1.0});
 }
 
 const Arena& SumoGame::get_arena() const
@@ -62,9 +63,7 @@ void SumoGame::remove_outside_participants(std::vector<std::shared_ptr<Glider>>&
 {
     for (auto it = participants.begin(); it != participants.end();)
     {
-        const Glider& glider = **it;
-        const auto participant_center = glider.get_position() + Vector2{glider.get_radius(), glider.get_radius()};
-        if (!arena_.contains(participant_center))
+        if (!arena_.contains((*it)->get_position()))
         {
             it = participants.erase(it);
         }
@@ -155,6 +154,7 @@ void SumoGame::update(const std::chrono::duration<double>& time_step)
     remove_outside_participants(participants_);
 
     // Add new participants if there are less than the desired number of participants
+    // TODO deal with participants spawning inside each other
     // while (participants_.size() < max_participant_count_)
     // {
     //     add_new_participant();
