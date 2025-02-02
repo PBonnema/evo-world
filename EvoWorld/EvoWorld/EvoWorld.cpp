@@ -9,11 +9,11 @@
 
 namespace
 {
-    void draw_sumo_game(sf::RenderWindow& window, const Arena& arena, const SumoGame& sumo_game)
+    void draw_sumo_game(sf::RenderWindow& window, const SumoGame& sumo_game)
     {
         window.clear();
 
-        window.draw(arena.get_shape());
+        window.draw(sumo_game.get_arena().get_shape());
 
         // Draw all creatures from the sumo game
         for (const std::shared_ptr<Glider>& participant : sumo_game.get_participants())
@@ -66,7 +66,7 @@ int main()
         }
 
         sumo_game.update(now, time_step);
-        draw_sumo_game(window, arena, sumo_game);
+        draw_sumo_game(window, sumo_game);
 
         last_time = now;
     }
