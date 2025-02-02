@@ -1,6 +1,7 @@
 #include "Arena.h"
 #include "SumoGame.h"
 #include "SumoGliders/PlayerGlider.h"
+#include "SumoGliders/EvoTrajectoryGlider.h"
 
 #include <SFML/Graphics.hpp>
 #include <iostream>
@@ -36,8 +37,20 @@ int main()
     sf::RenderWindow window{sf::VideoMode{{1000, 1000}}, "Evo World"};
 
     const Arena arena{{500.0, 500.0}, 500.0};
-    const auto player_glider = std::make_shared<PlayerGlider>(arena.get_center(), 1.0, 80.0, window);
-    SumoGame sumo_game{random_generator, arena, 3, {player_glider}, 500.0, 100.0, 80.0, 1.0};
+
+    const auto mass = 1.0;
+    const auto radius = 80.0;
+
+    const auto player_glider = std::make_shared<PlayerGlider>(arena.get_center(), mass, radius, window);
+    const auto evo_trajectory_glider = std::make_shared<EvoTrajectoryGlider>(arena.get_center(), mass, radius,
+        EvoTrajectoryGlider::trajectory_t{
+            {.duration = std::chrono::duration<double>{1.0}, .acceleration = {100.0, 0.0}},
+            {.duration = std::chrono::duration<double>{1.0}, .acceleration = {0.0, 100.0}},
+            {.duration = std::chrono::duration<double>{1.0}, .acceleration = {-100.0, 0.0}},
+            {.duration = std::chrono::duration<double>{1.0}, .acceleration = {0.0, -100.0}},
+        });
+
+    SumoGame sumo_game{random_generator, arena, 3, {player_glider}, 500.0, 100.0, radius, mass};
 
     auto last_time = std::chrono::high_resolution_clock::now();
     while (window.isOpen())
