@@ -19,5 +19,6 @@ public:
 
 private:
     const trajectory_t trajectory_;
+    mutable long long current_trajectory_index_ = 0;
     mutable std::optional<std::chrono::high_resolution_clock::time_point> start_time_;
 };

@@ -11,16 +11,16 @@
 #include <ranges>
 #include <unordered_map>
 
-SumoGame::SumoGame(const std::mt19937& random_generator, Arena arena, const size_t participant_count,
-                   const std::vector<std::shared_ptr<Glider>>& initial_participants, const double max_acceleration,
-                   const double coefficient_of_friction, const double participant_radius, const double participant_mass) :
+SumoGame::SumoGame(const std::mt19937& random_generator, Arena arena, const size_t participant_count, const double max_acceleration,
+                   const double coefficient_of_friction, const double participant_radius, const double participant_mass,
+                   const std::vector<std::shared_ptr<Glider>>& initial_participants) :
     max_acceleration_{max_acceleration},
     coefficient_of_friction_{coefficient_of_friction},
     participant_radius_{participant_radius},
     participant_mass_{participant_mass},
+    max_participant_count_{participant_count},
     arena_{std::move(arena)},
     participants_{initial_participants},
-    max_participant_count_{participant_count},
     random_generator_{random_generator}
 {
     // TODO deal with participants spawning inside each other
@@ -28,13 +28,6 @@ SumoGame::SumoGame(const std::mt19937& random_generator, Arena arena, const size
     {
         add_new_participant();
     }
-
-    // participants_.emplace_back(std::make_unique<Glider>(Vector2{0.0, 0.0} + arena_.get_center() + Vector2<double>::from_polar(0.0, -450.0), participant_mass_, participant_radius_));
-    // participants_.emplace_back(std::make_unique<Glider>(Vector2{0.0, 0.0} + arena_.get_center() + Vector2<double>::from_polar(0.0, -200.0 + participant_radius_ * 2), participant_mass_, participant_radius_));
-    // participants_.emplace_back(std::make_unique<Glider>(Vector2{0.0, 0.0} + arena_.get_center() + Vector2<double>::from_polar(0.0, -200.0 + participant_radius_ * 4), participant_mass_, participant_radius_));
-    // participants_.emplace_back(std::make_unique<Glider>(Vector2{0.0, 0.0} + arena_.get_center() + Vector2<double>::from_polar(0.0, -200.0 + participant_radius_ * 6), participant_mass_, participant_radius_));
-    // participants_.emplace_back(std::make_unique<Glider>(Vector2{0.0, 0.0} + arena_.get_center() + Vector2<double>::from_polar(0.0, -200.0 + participant_radius_ * 8), participant_mass_, participant_radius_));
-    // participants_[0]->apply_impulse({100.0, 0.0}, std::chrono::duration<double>{1.0});
 }
 
 const Arena& SumoGame::get_arena() const
@@ -203,8 +196,8 @@ void SumoGame::update(const std::chrono::high_resolution_clock::time_point& now,
 
     // Add new participants if there are less than the desired number of participants
     // TODO deal with participants spawning inside each other
-    while (participants_.size() < max_participant_count_)
-    {
-        add_new_participant();
-    }
+    // while (participants_.size() < max_participant_count_)
+    // {
+    //     add_new_participant();
+    // }
 }

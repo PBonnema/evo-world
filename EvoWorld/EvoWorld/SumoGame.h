@@ -9,9 +9,9 @@
 class SumoGame
 {
 public:
-    explicit SumoGame(const std::mt19937& random_generator, Arena arena, size_t participant_count,
-                      const std::vector<std::shared_ptr<Glider>>& initial_participants, double max_acceleration,
-                      double coefficient_of_friction, double participant_radius, double participant_mass);
+    explicit SumoGame(const std::mt19937& random_generator, Arena arena, size_t participant_count, double max_acceleration,
+                      double coefficient_of_friction, double participant_radius, double participant_mass,
+                      const std::vector<std::shared_ptr<Glider>>& initial_participants);
 
     [[nodiscard]] const Arena& get_arena() const;
     [[nodiscard]] const std::vector<std::shared_ptr<Glider>>& get_participants() const;
