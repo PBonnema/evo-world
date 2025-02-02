@@ -13,19 +13,19 @@ Vector2<double> EvoTrajectoryGlider::next_sumo_move(const SumoGame& sumo_game, c
 
     // Find the nearest opponent
     std::shared_ptr<Glider> nearest_opponent;
-    auto nearest_opponent_distance = std::numeric_limits<double>::max();
-    for (const auto& other_glider : sumo_game.get_participants())
+    auto nearest_distance_squared = std::numeric_limits<double>::infinity();
+    for (const auto& participant : sumo_game.get_participants())
     {
-        if (other_glider.get() == this)
+        if (participant.get() == this)
         {
             continue;
         }
 
-        const auto distance = (other_glider->get_position() - get_position()).get_length();
-        if (distance < nearest_opponent_distance)
+        const auto distance_squared = get_position().distance_squared(participant->get_position());
+        if (distance_squared < nearest_distance_squared)
         {
-            nearest_opponent_distance = distance;
-            nearest_opponent = other_glider;
+            nearest_opponent = participant;
+            nearest_distance_squared = distance_squared;
         }
     }
     const auto target_position = nearest_opponent->get_position();
