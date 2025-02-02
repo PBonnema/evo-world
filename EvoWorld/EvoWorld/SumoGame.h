@@ -20,7 +20,7 @@ public:
     [[nodiscard]] double get_participant_radius() const;
     [[nodiscard]] double get_participant_mass() const;
     [[nodiscard]] size_t get_max_participant_count() const;
-    void update(const std::chrono::duration<double>& time_step);
+    void update(const std::chrono::high_resolution_clock::time_point& now, const std::chrono::duration<double>& time_step);
 
 private:
     const double max_acceleration_;

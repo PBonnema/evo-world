@@ -37,7 +37,7 @@ int main()
 
     const Arena arena{{500.0, 500.0}, 500.0};
     const auto player_glider = std::make_shared<PlayerGlider>(arena.get_center(), 1.0, 80.0, window);
-    SumoGame sumo_game{random_generator, arena, 3, {player_glider}, 500.0, 100, 80.0, 1.0};
+    SumoGame sumo_game{random_generator, arena, 3, {player_glider}, 500.0, 100.0, 80.0, 1.0};
 
     auto last_time = std::chrono::high_resolution_clock::now();
     while (window.isOpen())
@@ -51,7 +51,7 @@ int main()
                 window.close();
         }
 
-        sumo_game.update(time_step);
+        sumo_game.update(now, time_step);
         draw_sumo_game(window, arena, sumo_game);
 
         last_time = now;

@@ -147,6 +147,7 @@
     <ClCompile Include="CompoundShape.cpp" />
     <ClCompile Include="EvoWorld.cpp" />
     <ClCompile Include="SumoGame.cpp" />
+    <ClCompile Include="SumoGliders\EvoTrajectoryGlider.cpp" />
     <ClCompile Include="SumoGliders\Glider.cpp" />
     <ClCompile Include="SumoGliders\CenteringGlider.cpp" />
     <ClCompile Include="SumoGliders\PlayerGlider.cpp" />
@@ -157,6 +158,7 @@
     <ClInclude Include="CompoundShape.h" />
     <ClInclude Include="fwd_decl.h" />
     <ClInclude Include="SumoGame.h" />
+    <ClInclude Include="SumoGliders\EvoTrajectoryGlider.h" />
     <ClInclude Include="SumoGliders\Glider.h" />
     <ClInclude Include="SumoGliders\CenteringGlider.h" />
     <ClInclude Include="SumoGliders\PlayerGlider.h" />

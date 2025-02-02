@@ -12,7 +12,7 @@ PlayerGlider::PlayerGlider(const Vector2<double>& position, const double mass, c
     circle.setFillColor(sf::Color::Green);
 }
 
-Vector2<double> PlayerGlider::next_sumo_move(const SumoGame& sumo_game) const
+Vector2<double> PlayerGlider::next_sumo_move(const SumoGame& sumo_game, const std::chrono::high_resolution_clock::time_point& now, const std::chrono::duration<double>& time_step) const
 {
     // Take mouse position as input
     const auto raw_mouse_position = sf::Mouse::getPosition(window_);

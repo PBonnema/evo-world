@@ -10,7 +10,7 @@ RushGlider::RushGlider(const Vector2<double>& position, double mass, double radi
     circle.setFillColor(sf::Color::Red);
 }
 
-Vector2<double> RushGlider::next_sumo_move(const SumoGame& sumo_game) const
+Vector2<double> RushGlider::next_sumo_move(const SumoGame& sumo_game, const std::chrono::high_resolution_clock::time_point& now, const std::chrono::duration<double>& time_step) const
 {
     // Move full force to the nearest opponent
     Vector2<double> nearest_opponent_position;

@@ -19,7 +19,7 @@ public:
     void add_position(const Vector2<double>& position);
     void add_velocity(const Vector2<double>& velocity);
     void apply_impulse(const Vector2<double>& force, const std::chrono::duration<double>& time_step);
-    [[nodiscard]] virtual Vector2<double> next_sumo_move(const SumoGame& sumo_game) const = 0;
+    [[nodiscard]] virtual Vector2<double> next_sumo_move(const SumoGame& sumo_game, const std::chrono::high_resolution_clock::time_point& now, const std::chrono::duration<double>& time_step) const = 0;
 
 protected:
     const double mass_;

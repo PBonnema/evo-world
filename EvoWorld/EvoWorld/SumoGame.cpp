@@ -159,7 +159,7 @@ void SumoGame::add_new_participant()
     participants_.emplace_back(std::make_unique<CenteringGlider>(position, participant_mass_, participant_radius_));
 }
 
-void SumoGame::update(const std::chrono::duration<double>& time_step)
+void SumoGame::update(const std::chrono::high_resolution_clock::time_point& now, const std::chrono::duration<double>& time_step)
 {
     // Ask each creature for their next move (= preferred force)
     // sum up forces for each creature and add friction based on their velocity
@@ -173,7 +173,7 @@ void SumoGame::update(const std::chrono::duration<double>& time_step)
     std::unordered_map<std::shared_ptr<Glider>, Vector2<double>> moves;
     for (const auto& glider : participants_)
     {
-        const Vector2<double> move_force = glider->next_sumo_move(*this);
+        const Vector2<double> move_force = glider->next_sumo_move(*this, now, time_step);
 
         // Assert the move force magnitude is no more than the maximum force magnitude (which is maximum acceleration times mass).
         // Otherwise, next_sumo_move is bugged. No need to check at run time otherwise. Allow for a bit of numerical error
