@@ -7,3 +7,4 @@ struct Vector2;
 class Glider;
 class RushGlider;
 class PlayerGlider;
+class CenteringGlider;

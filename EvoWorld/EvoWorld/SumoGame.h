@@ -1,6 +1,6 @@
 #pragma once
 #include "Arena.h"
-#include "SumoGliders/Glider.h"
+#include "fwd_decl.h"
 
 #include <chrono>
 #include <random>
@@ -15,6 +15,11 @@ public:
 
     [[nodiscard]] const Arena& get_arena() const;
     [[nodiscard]] const std::vector<std::shared_ptr<Glider>>& get_participants() const;
+    [[nodiscard]] double get_max_acceleration() const;
+    [[nodiscard]] double get_coefficient_of_friction() const;
+    [[nodiscard]] double get_participant_radius() const;
+    [[nodiscard]] double get_participant_mass() const;
+    [[nodiscard]] size_t get_max_participant_count() const;
     void update(const std::chrono::duration<double>& time_step);
 
 private:
@@ -22,10 +27,10 @@ private:
     const double coefficient_of_friction_;
     const double participant_radius_;
     const double participant_mass_;
+    const size_t max_participant_count_;
 
     Arena arena_;
     std::vector<std::shared_ptr<Glider>> participants_;
-    const size_t max_participant_count_;
     std::mt19937 random_generator_;
 
     void add_new_participant();

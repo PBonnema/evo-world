@@ -3,6 +3,7 @@
 #include "SumoGliders/Glider.h"
 #include "SumoGliders/PlayerGlider.h"
 #include "SumoGliders/RushGlider.h"
+#include "SumoGliders/CenteringGlider.h"
 
 #include <chrono>
 #include <numbers>
@@ -44,6 +45,31 @@ const Arena& SumoGame::get_arena() const
 const std::vector<std::shared_ptr<Glider>>& SumoGame::get_participants() const
 {
     return participants_;
+}
+
+double SumoGame::get_max_acceleration() const
+{
+    return max_acceleration_;
+}
+
+double SumoGame::get_coefficient_of_friction() const
+{
+    return coefficient_of_friction_;
+}
+
+double SumoGame::get_participant_radius() const
+{
+    return participant_radius_;
+}
+
+double SumoGame::get_participant_mass() const
+{
+    return participant_mass_;
+}
+
+size_t SumoGame::get_max_participant_count() const
+{
+    return max_participant_count_;
 }
 
 Vector2<double> SumoGame::calculate_friction(const Glider& glider, const std::chrono::duration<double>& time_step) const
@@ -113,7 +139,8 @@ void SumoGame::resolve_collision(Glider& glider, Glider& other_glider)
 
 void SumoGame::remove_outside_participants(std::vector<std::shared_ptr<Glider>>& participants) const
 {
-    std::erase_if(participants, [this](const auto& glider) {
+    std::erase_if(participants, [this](const auto& glider)
+    {
         return !arena_.contains(glider->get_position());
     });
 }
@@ -129,7 +156,7 @@ void SumoGame::add_new_participant()
     const auto distance_from_center = arena_.get_radius() * std::sqrt(polar_length_distribution(random_generator_));
     const auto position = arena_.get_center() + Vector2<double>::from_polar(angle, distance_from_center);
 
-    participants_.emplace_back(std::make_unique<RushGlider>(position, participant_mass_, participant_radius_));
+    participants_.emplace_back(std::make_unique<CenteringGlider>(position, participant_mass_, participant_radius_));
 }
 
 void SumoGame::update(const std::chrono::duration<double>& time_step)
@@ -146,7 +173,7 @@ void SumoGame::update(const std::chrono::duration<double>& time_step)
     std::unordered_map<std::shared_ptr<Glider>, Vector2<double>> moves;
     for (const auto& glider : participants_)
     {
-        const Vector2<double> move_force = glider->next_sumo_move(get_participants(), max_acceleration_, coefficient_of_friction_);
+        const Vector2<double> move_force = glider->next_sumo_move(*this);
 
         // Assert the move force magnitude is no more than the maximum force magnitude (which is maximum acceleration times mass).
         // Otherwise, next_sumo_move is bugged. No need to check at run time otherwise. Allow for a bit of numerical error

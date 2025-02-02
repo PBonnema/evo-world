@@ -1,4 +1,5 @@
 #include "RushGlider.h"
+#include "../SumoGame.h"
 
 #include <SFML/Graphics/CircleShape.hpp>
 
@@ -9,13 +10,12 @@ RushGlider::RushGlider(const Vector2<double>& position, double mass, double radi
     circle.setFillColor(sf::Color::Red);
 }
 
-Vector2<double> RushGlider::next_sumo_move(const std::vector<std::shared_ptr<Glider>>& all_gliders, double max_acceleration,
-    double coefficient_of_friction) const
+Vector2<double> RushGlider::next_sumo_move(const SumoGame& sumo_game) const
 {
     // Move full force to the nearest opponent
     Vector2<double> nearest_opponent_position;
     auto nearest_opponent_distance = std::numeric_limits<double>::max();
-    for (const auto& other_glider : all_gliders)
+    for (const auto& other_glider : sumo_game.get_participants())
     {
         if (other_glider.get() == this)
         {
@@ -30,6 +30,6 @@ Vector2<double> RushGlider::next_sumo_move(const std::vector<std::shared_ptr<Gli
         }
     }
 
-    const auto force = (nearest_opponent_position - get_position()).get_normalized() * max_acceleration * mass_;
+    const auto force = (nearest_opponent_position - get_position()).get_normalized() * sumo_game.get_max_acceleration() * mass_;
     return force;
 }
