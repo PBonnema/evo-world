@@ -40,20 +40,16 @@ int main()
 
     constexpr auto mass = 1.0;
     constexpr auto radius = 80.0;
-
-    const auto player_glider = std::make_shared<PlayerGlider>(arena.get_center(), mass, radius, window);
-    const auto evo_trajectory_glider = std::make_shared<EvoTrajectoryGlider>(arena.get_center(), mass, radius,
-        EvoTrajectoryGlider::trajectory_t{
-            {.duration = std::chrono::duration<double>{1.0}, .acceleration = {200.0, 0.0}},
-            {.duration = std::chrono::duration<double>{1.0}, .acceleration = {0.0, 200.0}},
-            {.duration = std::chrono::duration<double>{1.0}, .acceleration = {-200.0, 0.0}},
-            {.duration = std::chrono::duration<double>{1.0}, .acceleration = {0.0, -200.0}},
-        });
-
     SumoGame sumo_game{random_generator, arena, 1, 500.0, 100.0, radius, mass,
         {
-            player_glider,
-            evo_trajectory_glider
+            std::make_shared<PlayerGlider>(arena.get_center(), mass, radius, window),
+            std::make_shared<EvoTrajectoryGlider>(arena.get_center(), mass, radius,
+                EvoTrajectoryGlider::trajectory_t{
+                    {.duration = std::chrono::duration<double>{1.0}, .acceleration = {200.0, 0.0}},
+                    {.duration = std::chrono::duration<double>{1.0}, .acceleration = {0.0, 200.0}},
+                    {.duration = std::chrono::duration<double>{1.0}, .acceleration = {-200.0, 0.0}},
+                    {.duration = std::chrono::duration<double>{1.0}, .acceleration = {0.0, -200.0}},
+                })
         }
     };
 
