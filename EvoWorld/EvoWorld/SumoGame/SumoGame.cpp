@@ -1,5 +1,5 @@
 #include "SumoGame.h"
-#include "Vector2.h"
+#include "../Vector2.h"
 #include "SumoGliders/Glider.h"
 #include "SumoGliders/PlayerGlider.h"
 #include "SumoGliders/RushGlider.h"
@@ -138,6 +138,25 @@ void SumoGame::remove_outside_participants(std::vector<std::shared_ptr<Glider>>&
     });
 }
 
+void SumoGame::reset_outside_participants(const std::vector<std::shared_ptr<Glider>>& participants) const
+{
+    for (const auto& glider : participants)
+    {
+        if (!arena_.contains(glider->get_position()))
+        {
+            // Create creature at a uniform, random position within the circular arena
+            // std::uniform_real_distribution polar_angle_distribution{0.0, std::numbers::pi * 2};
+            // std::uniform_real_distribution polar_length_distribution{0.0, 1.0};
+            //
+            // const auto angle = polar_angle_distribution(random_generator_);
+            // // This length calculation ensures the distribution is uniform in the arena
+            // const auto distance_from_center = arena_.get_radius() * std::sqrt(polar_length_distribution(random_generator_));
+            // const auto position = arena_.get_center() + Vector2<double>::cartesian_from_polar(angle, distance_from_center);
+            glider->set_position(arena_.get_center());
+        }
+    }
+}
+
 void SumoGame::add_new_participant()
 {
     // Create creature at a uniform, random position within the circular arena
@@ -147,7 +166,7 @@ void SumoGame::add_new_participant()
     const auto angle = polar_angle_distribution(random_generator_);
     // This length calculation ensures the distribution is uniform in the arena
     const auto distance_from_center = arena_.get_radius() * std::sqrt(polar_length_distribution(random_generator_));
-    const auto position = arena_.get_center() + Vector2<double>::from_polar(angle, distance_from_center);
+    const auto position = arena_.get_center() + Vector2<double>::cartesian_from_polar(angle, distance_from_center);
 
     participants_.emplace_back(std::make_unique<CenteringGlider>(position, participant_mass_, participant_radius_));
 }
@@ -192,7 +211,7 @@ void SumoGame::update(const std::chrono::high_resolution_clock::time_point& now,
     }
 
     // Remove participants that are outside the arena
-    remove_outside_participants(participants_);
+    reset_outside_participants(participants_);
 
     // Add new participants if there are less than the desired number of participants
     // TODO deal with participants spawning inside each other

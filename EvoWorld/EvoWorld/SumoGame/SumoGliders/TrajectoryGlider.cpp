@@ -1,11 +1,11 @@
-#include "EvoTrajectoryGlider.h"
+#include "TrajectoryGlider.h"
 #include "../SumoGame.h"
 
 #include <iostream>
 #include <ranges>
 #include <SFML/Graphics/CircleShape.hpp>
 
-EvoTrajectoryGlider::EvoTrajectoryGlider(const Vector2<double>& position, const double mass, const double radius, trajectory_t trajectory) :
+TrajectoryGlider::TrajectoryGlider(const Vector2<double>& position, const double mass, const double radius, trajectory_t trajectory) :
     Glider{position, mass, radius},
     trajectory_{std::move(trajectory)}
 {
@@ -13,7 +13,7 @@ EvoTrajectoryGlider::EvoTrajectoryGlider(const Vector2<double>& position, const 
     circle.setFillColor(sf::Color::Magenta);
 }
 
-Vector2<double> EvoTrajectoryGlider::next_sumo_move(const SumoGame& sumo_game, const std::chrono::high_resolution_clock::time_point& now, const std::chrono::duration<double>& time_step) const
+Vector2<double> TrajectoryGlider::next_sumo_move(const SumoGame& sumo_game, const std::chrono::high_resolution_clock::time_point& now, const std::chrono::duration<double>& time_step) const
 {
     if (sumo_game.get_participants().size() <= 1)
     {

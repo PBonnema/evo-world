@@ -143,26 +143,28 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Arena.cpp" />
     <ClCompile Include="CompoundShape.cpp" />
     <ClCompile Include="EvoWorld.cpp" />
-    <ClCompile Include="SumoGame.cpp" />
-    <ClCompile Include="SumoGliders\EvoTrajectoryGlider.cpp" />
-    <ClCompile Include="SumoGliders\Glider.cpp" />
-    <ClCompile Include="SumoGliders\CenteringGlider.cpp" />
-    <ClCompile Include="SumoGliders\PlayerGlider.cpp" />
-    <ClCompile Include="SumoGliders\RushGlider.cpp" />
+    <ClCompile Include="SumoGame\Arena.cpp" />
+    <ClCompile Include="SumoGame\SumoGame.cpp" />
+    <ClCompile Include="SumoGame\SumoGliders\CenteringGlider.cpp" />
+    <ClCompile Include="SumoGame\SumoGliders\EvoGlider.cpp" />
+    <ClCompile Include="SumoGame\SumoGliders\Glider.cpp" />
+    <ClCompile Include="SumoGame\SumoGliders\PlayerGlider.cpp" />
+    <ClCompile Include="SumoGame\SumoGliders\RushGlider.cpp" />
+    <ClCompile Include="SumoGame\SumoGliders\TrajectoryGlider.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Arena.h" />
     <ClInclude Include="CompoundShape.h" />
     <ClInclude Include="fwd_decl.h" />
-    <ClInclude Include="SumoGame.h" />
-    <ClInclude Include="SumoGliders\EvoTrajectoryGlider.h" />
-    <ClInclude Include="SumoGliders\Glider.h" />
-    <ClInclude Include="SumoGliders\CenteringGlider.h" />
-    <ClInclude Include="SumoGliders\PlayerGlider.h" />
-    <ClInclude Include="SumoGliders\RushGlider.h" />
+    <ClInclude Include="SumoGame\Arena.h" />
+    <ClInclude Include="SumoGame\SumoGame.h" />
+    <ClInclude Include="SumoGame\SumoGliders\CenteringGlider.h" />
+    <ClInclude Include="SumoGame\SumoGliders\EvoGlider.h" />
+    <ClInclude Include="SumoGame\SumoGliders\Glider.h" />
+    <ClInclude Include="SumoGame\SumoGliders\PlayerGlider.h" />
+    <ClInclude Include="SumoGame\SumoGliders\RushGlider.h" />
+    <ClInclude Include="SumoGame\SumoGliders\TrajectoryGlider.h" />
     <ClInclude Include="Vector2.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

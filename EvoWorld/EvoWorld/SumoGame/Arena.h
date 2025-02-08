@@ -1,6 +1,6 @@
 #pragma once
-#include "CompoundShape.h"
-#include "Vector2.h"
+#include "../CompoundShape.h"
+#include "../Vector2.h"
 
 class Arena
 {

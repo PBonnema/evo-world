@@ -1,7 +1,9 @@
-#include "Arena.h"
-#include "SumoGame.h"
-#include "SumoGliders/PlayerGlider.h"
-#include "SumoGliders/EvoTrajectoryGlider.h"
+#include "SumoGame/Arena.h"
+#include "SumoGame/SumoGame.h"
+#include "SumoGame/SumoGliders/PlayerGlider.h"
+#include "SumoGame/SumoGliders/TrajectoryGlider.h"
+#include "SumoGame/SumoGliders/CenteringGlider.h"
+#include "SumoGame/SumoGliders/RushGlider.h"
 
 #include <SFML/Graphics.hpp>
 #include <iostream>
@@ -42,17 +44,19 @@ int main()
     constexpr auto radius = 80.0;
     SumoGame sumo_game{random_generator, arena, 1, 500.0, 100.0, radius, mass,
         {
-            std::make_shared<PlayerGlider>(arena.get_center(), mass, radius, window),
-            std::make_shared<EvoTrajectoryGlider>(arena.get_center(), mass, radius,
-                EvoTrajectoryGlider::trajectory_t{
-                    {.duration = std::chrono::duration<double>{1.0}, .acceleration = {200.0, 0.0}},
-                    {.duration = std::chrono::duration<double>{1.0}, .acceleration = {0.0, 200.0}},
-                    {.duration = std::chrono::duration<double>{1.0}, .acceleration = {-200.0, 0.0}},
-                    {.duration = std::chrono::duration<double>{1.0}, .acceleration = {0.0, -200.0}},
-                })
+            std::make_shared<CenteringGlider>(arena.get_center() + Vector2{ 200.0, 200.0 }, mass, radius),
+            std::make_shared<RushGlider>(arena.get_center() + Vector2{ -200.0, -200.0 }, mass, radius),
+            // std::make_shared<TrajectoryGlider>(arena.get_center(), mass, radius,
+            //     TrajectoryGlider::trajectory_t{
+            //         {.duration = std::chrono::duration<double>{1.0}, .acceleration = {200.0, 0.0}},
+            //         {.duration = std::chrono::duration<double>{1.0}, .acceleration = {0.0, 200.0}},
+            //         {.duration = std::chrono::duration<double>{1.0}, .acceleration = {-200.0, 0.0}},
+            //         {.duration = std::chrono::duration<double>{1.0}, .acceleration = {0.0, -200.0}},
+            //     })
         }
     };
 
+    // Game loop
     auto last_time = std::chrono::high_resolution_clock::now();
     while (window.isOpen())
     {

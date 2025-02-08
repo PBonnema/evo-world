@@ -10,7 +10,7 @@ Glider::Glider(const Vector2<double>& position, const double mass, const double 
     radius_{radius}
 {
     shape_.setOrigin(sf::Vector2f{static_cast<float>(radius), static_cast<float>(radius)});
-    shape_.setPosition({static_cast<float>(position_.get_x()), static_cast<float>(position_.get_y())});
+    shape_.setPosition({static_cast<float>(position_.x()), static_cast<float>(position_.y())});
 }
 
 const CompoundShape& Glider::get_shape() const
@@ -43,10 +43,16 @@ double Glider::get_radius() const
     return radius_;
 }
 
+void Glider::set_position(const Vector2<double>& position)
+{
+    position_ = position;
+    shape_.setPosition({static_cast<float>(position_.x()), static_cast<float>(position_.y())});
+}
+
 void Glider::add_position(const Vector2<double>& position)
 {
     position_ += position;
-    shape_.setPosition({static_cast<float>(position_.get_x()), static_cast<float>(position_.get_y())});
+    shape_.setPosition({static_cast<float>(position_.x()), static_cast<float>(position_.y())});
 }
 
 void Glider::add_velocity(const Vector2<double>& velocity)
@@ -61,5 +67,5 @@ void Glider::apply_impulse(const Vector2<double>& force, const std::chrono::dura
     // Simple Euler integration
     velocity_ += acceleration * time_step.count();
     position_ += velocity_ * time_step.count();
-    shape_.setPosition({static_cast<float>(position_.get_x()), static_cast<float>(position_.get_y())});
+    shape_.setPosition({static_cast<float>(position_.x()), static_cast<float>(position_.y())});
 }

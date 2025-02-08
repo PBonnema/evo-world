@@ -1,7 +1,8 @@
 #pragma once
-#include "../CompoundShape.h"
-#include "../Vector2.h"
-#include "../fwd_decl.h"
+#include "../../CompoundShape.h"
+#include "../../Vector2.h"
+#include "../../fwd_decl.h"
+
 #include <chrono>
 
 class Glider
@@ -16,6 +17,7 @@ public:
     [[nodiscard]] const Vector2<double>& get_velocity() const;
     [[nodiscard]] double get_mass() const;
     [[nodiscard]] double get_radius() const;
+    void set_position(const Vector2<double>& position);
     void add_position(const Vector2<double>& position);
     void add_velocity(const Vector2<double>& velocity);
     void apply_impulse(const Vector2<double>& force, const std::chrono::duration<double>& time_step);

@@ -8,5 +8,6 @@ class Glider;
 class RushGlider;
 class PlayerGlider;
 class CenteringGlider;
-class EvoTrajectoryGlider;
+class TrajectoryGlider;
 struct TrajectoryPoint;
+class EvoGlider;

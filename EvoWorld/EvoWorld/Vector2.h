@@ -98,12 +98,12 @@ public:
         return x_ != other.x_ || y_ != other.y_;
     }
 
-    [[nodiscard]] constexpr T get_x() const
+    [[nodiscard]] constexpr T x() const
     {
         return x_;
     }
 
-    [[nodiscard]] constexpr T get_y() const
+    [[nodiscard]] constexpr T y() const
     {
         return y_;
     }
@@ -232,6 +232,16 @@ public:
         return this->x_ * other.y_ - this->y_ * other.x_;
     }
 
+    [[nodiscard]] constexpr Vector2 to_polar() const
+    {
+        return polar_from_cartesian(x_, y_);
+    }
+
+    [[nodiscard]] constexpr Vector2 to_cartesian() const
+    {
+        return cartesian_from_polar(x_, y_);
+    }
+
     // Static
 
     [[nodiscard]] constexpr static Vector2 lerp(const Vector2& v1, const Vector2& v2, double t)
@@ -239,14 +249,14 @@ public:
         return v1 + (v2 - v1) * t;
     }
 
-    [[nodiscard]] constexpr static Vector2 from_polar(const double angle, const double r = 1.0)
+    [[nodiscard]] constexpr static Vector2 cartesian_from_polar(const double angle, const double r = 1.0)
     {
         return {std::cos(angle) * r, std::sin(angle) * r};
     }
 
-    [[nodiscard]] constexpr static Vector2 from_polar(const Vector2& v)
+    [[nodiscard]] constexpr static Vector2 polar_from_cartesian(const double x, const double y)
     {
-        return from_polar(v.x_, v.y_);
+        return {std::atan2(y, x), std::sqrt(x * x + y * y)};
     }
 
     [[nodiscard]] constexpr static Vector2 min(const Vector2& v1, const Vector2& v2)
