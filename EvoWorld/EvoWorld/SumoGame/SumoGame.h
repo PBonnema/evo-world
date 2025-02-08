@@ -31,7 +31,7 @@ private:
 
     Arena arena_;
     std::vector<std::shared_ptr<Glider>> participants_;
-    std::mt19937 random_generator_;
+    mutable std::mt19937 random_generator_;
 
     void add_new_participant();
     Vector2<double> calculate_friction(const Glider& glider, const std::chrono::duration<double>& time_step) const;

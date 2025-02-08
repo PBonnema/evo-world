@@ -140,19 +140,19 @@ void SumoGame::remove_outside_participants(std::vector<std::shared_ptr<Glider>>&
 
 void SumoGame::reset_outside_participants(const std::vector<std::shared_ptr<Glider>>& participants) const
 {
+    std::uniform_real_distribution polar_angle_distribution{0.0, std::numbers::pi * 2};
+    std::uniform_real_distribution polar_length_distribution{0.0, 1.0};
+
     for (const auto& glider : participants)
     {
         if (!arena_.contains(glider->get_position()))
         {
             // Create creature at a uniform, random position within the circular arena
-            // std::uniform_real_distribution polar_angle_distribution{0.0, std::numbers::pi * 2};
-            // std::uniform_real_distribution polar_length_distribution{0.0, 1.0};
-            //
-            // const auto angle = polar_angle_distribution(random_generator_);
-            // // This length calculation ensures the distribution is uniform in the arena
-            // const auto distance_from_center = arena_.get_radius() * std::sqrt(polar_length_distribution(random_generator_));
-            // const auto position = arena_.get_center() + Vector2<double>::cartesian_from_polar(angle, distance_from_center);
-            glider->set_position(arena_.get_center());
+            const auto angle = polar_angle_distribution(random_generator_);
+            // This length calculation ensures the distribution is uniform in the arena
+            const auto distance_from_center = arena_.get_radius() * std::sqrt(polar_length_distribution(random_generator_));
+            const auto position = arena_.get_center() + Vector2<double>::cartesian_from_polar(angle, distance_from_center);
+            glider->set_position(position);
         }
     }
 }
