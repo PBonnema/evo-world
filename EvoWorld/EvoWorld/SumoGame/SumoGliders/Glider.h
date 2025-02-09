@@ -1,11 +1,12 @@
 #pragma once
 #include "../../CompoundShape.h"
 #include "../../Vector2.h"
+#include "../../PhysicsDisk.h"
 #include "../../fwd_decl.h"
 
 #include <chrono>
 
-class Glider
+class Glider : public PhysicsDisk
 {
 public:
     Glider(const Vector2<double>& position, double mass, double radius);

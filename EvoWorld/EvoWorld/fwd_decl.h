@@ -11,3 +11,5 @@ class CenteringGlider;
 class TrajectoryGlider;
 struct TrajectoryPoint;
 class EvoGlider;
+class NewtonianDiskPhysics;
+class PhysicsDisk;
