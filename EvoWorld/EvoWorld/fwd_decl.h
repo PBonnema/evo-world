@@ -11,5 +11,7 @@ class CenteringGlider;
 class TrajectoryGlider;
 struct TrajectoryPoint;
 class EvoGlider;
-class NewtonianDiskPhysics;
 class PhysicsDisk;
+template<typename TDisk>
+requires std::derived_from<TDisk, PhysicsDisk>
+class NewtonianDiskPhysics;

@@ -1,5 +1,6 @@
 #include "SumoGame.h"
 #include "../Vector2.h"
+#include "../NewtonianDiskPhysics.h"
 #include "SumoGliders/Glider.h"
 #include "SumoGliders/PlayerGlider.h"
 #include "SumoGliders/RushGlider.h"
@@ -63,71 +64,6 @@ double SumoGame::get_participant_mass() const
 size_t SumoGame::get_max_participant_count() const
 {
     return max_participant_count_;
-}
-
-Vector2<double> SumoGame::calculate_friction(const Glider& glider, const std::chrono::duration<double>& time_step) const
-{
-    const auto speed = glider.get_velocity().get_length();
-    if (speed == 0.0)
-    {
-        return {0.0, 0.0};
-    }
-
-    // The gravitational constant is implicitly set to 1
-    auto friction_magnitude = glider.get_mass() * coefficient_of_friction_;
-
-    // Scale the friction such that the impulse does not exceed the remaining momentum of the glider within this time step
-    // This prevents the glider from moving backwards. It can come to a full stop.
-    const auto friction_impulse = friction_magnitude * time_step.count();
-    const auto remaining_momentum = speed * glider.get_mass();
-    if (friction_impulse > remaining_momentum)
-    {
-        friction_magnitude *= remaining_momentum / friction_impulse;
-    }
-
-    return glider.get_velocity() / (speed / -friction_magnitude);
-}
-
-std::unordered_map<std::shared_ptr<Glider>, std::shared_ptr<Glider>> SumoGame::detect_collisions(
-    const std::vector<std::shared_ptr<Glider>>& participants)
-{
-    std::unordered_map<std::shared_ptr<Glider>, std::shared_ptr<Glider>> collisions;
-    // Don't detect collisions between the same glider twice
-    for (auto it = participants.begin(); it != participants.end(); ++it)
-    {
-        for (auto other_it = std::next(it); other_it != participants.end(); ++other_it)
-        {
-            const auto distance_squared = (*it)->get_position().distance_squared((*other_it)->get_position());
-            const auto radius_sum = (*it)->get_radius() + (*other_it)->get_radius();
-            if (distance_squared < radius_sum * radius_sum)
-            {
-                collisions[*it] = *other_it;
-            }
-        }
-    }
-
-    return collisions;
-}
-
-void SumoGame::resolve_collision(Glider& glider, Glider& other_glider)
-{
-    // TODO bug: gliders can now merge when they hug each other with 0 relative velocity (due to friction)
-    // TODO Move the gliders apart along the direction of their velocity so they don't overlap. The offset for both should be proportional to their velocity.
-
-    // Bounce as circles
-    const auto normal = (other_glider.get_position() - glider.get_position()).get_normalized();
-    const auto relative_velocity = other_glider.get_velocity() - glider.get_velocity();
-    const auto velocity_along_normal = relative_velocity.dot(normal);
-
-    if (velocity_along_normal <= 0.0)
-    {
-        constexpr auto e = 1.0; // Perfectly elastic collision
-        const auto impulse_magnitude = -(1.0 + e) * velocity_along_normal / (1.0 / glider.get_mass() + 1.0 / other_glider.get_mass());
-
-        const auto impulse = normal * impulse_magnitude;
-        glider.add_velocity(-impulse / glider.get_mass());
-        other_glider.add_velocity(impulse / other_glider.get_mass());
-    }
 }
 
 void SumoGame::remove_outside_participants(std::vector<std::shared_ptr<Glider>>& participants) const
@@ -194,21 +130,7 @@ void SumoGame::update(const std::chrono::high_resolution_clock::time_point& now,
         moves[glider] = move_force;
     }
 
-    for (const auto& [glider, move_force] : moves)
-    {
-        const auto friction = calculate_friction(*glider, time_step);
-
-        // Sum up all forces and apply them
-        const auto total_force = move_force + friction;
-        glider->apply_impulse(total_force, time_step);
-    }
-
-    // Collision handling
-    for (const auto& [glider, other_glider] : detect_collisions(participants_))
-    {
-        resolve_collision(*glider, *other_glider);
-        // TODO perfect this by playing time up until the first collision, resolve it, and continue time until the next collision, recursively
-    }
+    NewtonianDiskPhysics<Glider>::apply_physics(time_step, coefficient_of_friction_, participants_, moves);
 
     // Remove participants that are outside the arena
     reset_outside_participants(participants_);
