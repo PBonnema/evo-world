@@ -107,7 +107,7 @@ void SumoGame::add_new_participant()
     participants_.emplace_back(std::make_unique<CenteringGlider>(position, participant_mass_, participant_radius_));
 }
 
-void SumoGame::update(const std::chrono::high_resolution_clock::time_point& now, const std::chrono::duration<double>& time_step)
+void SumoGame::update(const std::chrono::high_resolution_clock::time_point& now, const std::chrono::duration<double>& time_step) const
 {
     // Ask each creature for their next move (= preferred force)
     // sum up forces for each creature and add friction based on their velocity
