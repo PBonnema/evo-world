@@ -145,7 +145,7 @@
   <ItemGroup>
     <ClCompile Include="CompoundShape.cpp" />
     <ClCompile Include="EvoWorld.cpp" />
-    <ClCompile Include="NewtonianDiskPhysics.cpp" />
+    <ClCompile Include="NewtonianPhysics.cpp" />
     <ClCompile Include="PhysicsDisk.cpp" />
     <ClCompile Include="SumoGame\Arena.cpp" />
     <ClCompile Include="SumoGame\SumoGame.cpp" />
@@ -159,7 +159,7 @@
   <ItemGroup>
     <ClInclude Include="CompoundShape.h" />
     <ClInclude Include="fwd_decl.h" />
-    <ClInclude Include="NewtonianDiskPhysics.h" />
+    <ClInclude Include="NewtonianPhysics.h" />
     <ClInclude Include="PhysicsDisk.h" />
     <ClInclude Include="SumoGame\Arena.h" />
     <ClInclude Include="SumoGame\fwd_decl.h" />

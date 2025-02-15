@@ -5,4 +5,4 @@ struct Vector2;
 class PhysicsDisk;
 template<typename TDisk>
 requires std::derived_from<TDisk, PhysicsDisk>
-class NewtonianDiskPhysics;
+class NewtonianPhysics;

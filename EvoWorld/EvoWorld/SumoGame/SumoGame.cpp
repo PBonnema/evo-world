@@ -1,9 +1,8 @@
 #include "SumoGame.h"
 #include "../Vector2.h"
-#include "../NewtonianDiskPhysics.h"
+#include "../NewtonianPhysics.h"
 #include "SumoGliders/Glider.h"
 #include "SumoGliders/PlayerGlider.h"
-#include "SumoGliders/RushGlider.h"
 #include "SumoGliders/CenteringGlider.h"
 
 #include <chrono>
@@ -130,7 +129,7 @@ void SumoGame::update(const std::chrono::high_resolution_clock::time_point& now,
         moves[glider] = move_force;
     }
 
-    NewtonianDiskPhysics<Glider>::apply_physics(time_step, coefficient_of_friction_, participants_, moves);
+    NewtonianPhysics<Glider>::apply_physics(time_step, coefficient_of_friction_, participants_, moves);
 
     // Remove participants that are outside the arena
     reset_outside_participants(participants_);

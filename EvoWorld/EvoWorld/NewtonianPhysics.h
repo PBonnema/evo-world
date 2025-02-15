@@ -7,7 +7,7 @@
 #include <unordered_map>
 
 template <typename TDisk> requires std::derived_from<TDisk, PhysicsDisk>
-class NewtonianDiskPhysics
+class NewtonianPhysics
 {
 public:
     static void apply_physics(const std::chrono::duration<double>& time_step, double coefficient_of_friction,
@@ -23,9 +23,9 @@ private:
 };
 
 template <typename TDisk> requires std::derived_from<TDisk, PhysicsDisk>
-void NewtonianDiskPhysics<TDisk>::apply_physics(const std::chrono::duration<double>& time_step, const double coefficient_of_friction,
-                                                const std::vector<std::shared_ptr<TDisk>>& disks,
-                                                const std::unordered_map<std::shared_ptr<TDisk>, Vector2<double>>& forces)
+void NewtonianPhysics<TDisk>::apply_physics(const std::chrono::duration<double>& time_step, const double coefficient_of_friction,
+                                            const std::vector<std::shared_ptr<TDisk>>& disks,
+                                            const std::unordered_map<std::shared_ptr<TDisk>, Vector2<double>>& forces)
 {
     // sum up forces for each creature and add friction based on their velocity
     // do physics simulation for each creature, according to the time_step
@@ -50,8 +50,8 @@ void NewtonianDiskPhysics<TDisk>::apply_physics(const std::chrono::duration<doub
 }
 
 template <typename TDisk> requires std::derived_from<TDisk, PhysicsDisk>
-Vector2<double> NewtonianDiskPhysics<TDisk>::calculate_friction(const TDisk& disk, const std::chrono::duration<double>& time_step,
-                                                                double coefficient_of_friction)
+Vector2<double> NewtonianPhysics<TDisk>::calculate_friction(const TDisk& disk, const std::chrono::duration<double>& time_step,
+                                                            double coefficient_of_friction)
 {
     const auto speed = disk.get_velocity().get_length();
     if (speed == 0.0)
@@ -75,14 +75,14 @@ Vector2<double> NewtonianDiskPhysics<TDisk>::calculate_friction(const TDisk& dis
 }
 
 template <typename TDisk> requires std::derived_from<TDisk, PhysicsDisk>
-std::unordered_map<std::shared_ptr<TDisk>, std::shared_ptr<TDisk>> NewtonianDiskPhysics<TDisk>::detect_collisions(
+std::unordered_map<std::shared_ptr<TDisk>, std::shared_ptr<TDisk>> NewtonianPhysics<TDisk>::detect_collisions(
     const std::vector<std::shared_ptr<TDisk>>& disks)
 {
     std::unordered_map<std::shared_ptr<TDisk>, std::shared_ptr<TDisk>> collisions;
     // Don't detect collisions between the same glider twice
-    for (auto it = disks.begin(); it != disks.end(); ++it)
+    for (auto it = disks.cbegin(); it != disks.cend(); ++it)
     {
-        for (auto other_it = std::next(it); other_it != disks.end(); ++other_it)
+        for (auto other_it = std::next(it); other_it != disks.cend(); ++other_it)
         {
             const auto distance_squared = (*it)->get_position().distance_squared((*other_it)->get_position());
             const auto radius_sum = (*it)->get_radius() + (*other_it)->get_radius();
@@ -97,7 +97,7 @@ std::unordered_map<std::shared_ptr<TDisk>, std::shared_ptr<TDisk>> NewtonianDisk
 }
 
 template <typename TDisk> requires std::derived_from<TDisk, PhysicsDisk>
-void NewtonianDiskPhysics<TDisk>::resolve_collision(TDisk& disk, TDisk& other_disk)
+void NewtonianPhysics<TDisk>::resolve_collision(TDisk& disk, TDisk& other_disk)
 {
     // TODO bug: gliders can now merge when they hug each other with 0 relative velocity (due to friction)
     // TODO Move the gliders apart along the direction of their velocity so they don't overlap. The offset for both should be proportional to their velocity.
