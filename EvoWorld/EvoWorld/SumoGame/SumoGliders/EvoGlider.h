@@ -1,6 +1,5 @@
 #pragma once
 #include "Glider.h"
-#include "../../fwd_decl.h"
 
 #include <mdspan>
 
