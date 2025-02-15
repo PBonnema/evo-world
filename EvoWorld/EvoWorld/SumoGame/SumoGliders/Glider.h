@@ -2,7 +2,7 @@
 #include "../../CompoundShape.h"
 #include "../../Vector2.h"
 #include "../../PhysicsDisk.h"
-#include "../../fwd_decl.h"
+#include "../fwd_decl.h"
 
 #include <chrono>
 

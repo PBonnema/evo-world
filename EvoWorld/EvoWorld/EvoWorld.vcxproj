@@ -162,9 +162,11 @@
     <ClInclude Include="NewtonianDiskPhysics.h" />
     <ClInclude Include="PhysicsDisk.h" />
     <ClInclude Include="SumoGame\Arena.h" />
+    <ClInclude Include="SumoGame\fwd_decl.h" />
     <ClInclude Include="SumoGame\SumoGame.h" />
     <ClInclude Include="SumoGame\SumoGliders\CenteringGlider.h" />
     <ClInclude Include="SumoGame\SumoGliders\EvoGlider.h" />
+    <ClInclude Include="SumoGame\SumoGliders\fwd_decl.h" />
     <ClInclude Include="SumoGame\SumoGliders\Glider.h" />
     <ClInclude Include="SumoGame\SumoGliders\PlayerGlider.h" />
     <ClInclude Include="SumoGame\SumoGliders\RushGlider.h" />
