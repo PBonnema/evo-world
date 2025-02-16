@@ -1,5 +1,6 @@
 #include "PlayerGlider.h"
 #include "../SumoGame.h"
+#include "../../Vector2_SfVector2f_conversions.h"
 
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Window/Mouse.hpp>
@@ -14,9 +15,7 @@ PlayerGlider::PlayerGlider(const Vector2<double>& position, const double mass, c
 
 Vector2<double> PlayerGlider::next_sumo_move(const SumoGame& sumo_game, const std::chrono::high_resolution_clock::time_point& now, const std::chrono::duration<double>& time_step) const
 {
-    // Take mouse position as input
-    const auto raw_mouse_position = sf::Mouse::getPosition(window_);
-    const Vector2<double> mouse_position{static_cast<double>(raw_mouse_position.x), static_cast<double>(raw_mouse_position.y)};
+    const auto mouse_position = to_vector2<double>(sf::Mouse::getPosition(window_));
 
     // Calculate the force vector towards the mouse position
     return (mouse_position - get_position()).get_normalized() * sumo_game.get_max_acceleration() * mass_;

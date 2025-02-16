@@ -26,6 +26,12 @@ public:
         return lhs << '(' << rhs.x_ << ", " << rhs.y_ << ')';
     }
 
+    template <typename U>
+    explicit operator Vector2<U>() const
+    {
+        return {static_cast<U>(x_), static_cast<U>(y_)};
+    }
+
     [[nodiscard]] constexpr Vector2 operator-() const
     {
         return {-x_, -y_};
@@ -44,14 +50,14 @@ public:
     template <typename U>
     [[nodiscard]] constexpr Vector2 operator*(U scalar) const
     {
-        return {x_ * scalar, y_ * scalar};
+        return {static_cast<T>(x_ * scalar), static_cast<T>(y_ * scalar)};
     }
 
     template <typename U>
     [[nodiscard]] constexpr Vector2 operator/(U scalar) const
     {
         if (scalar != 0.0)
-            return {x_ / scalar, y_ / scalar};
+            return {static_cast<T>(x_ / scalar), static_cast<T>(y_ / scalar)};
         return *this;
     }
 
@@ -155,18 +161,17 @@ public:
         return {-y_, x_};
     }
 
-    [[nodiscard]] constexpr Vector2 get_rotated(T angle) const
+    [[nodiscard]] constexpr Vector2 get_rotated(T angle_radians) const
     {
-        T s = std::sin(angle);
-        T c = std::cos(angle);
+        T s = std::sin(angle_radians);
+        T c = std::cos(angle_radians);
         return {x_ * c - y_ * s, x_ * s + y_ * c};
     }
 
-    // [[nodiscard]] constexpr Vector2 get_reflected(const Vector2& normal) const
-    // {
-    //     assert(normal.get_length_squared() != 0.0);
-    //     return *this - normal * 2 * dot(normal); // TODO unclear what the operator precedence is here
-    // }
+    [[nodiscard]] constexpr Vector2 get_rotated_around(const Vector2<double>& vector2, const double angle_radians) const
+    {
+        return (*this - vector2).get_rotated(angle_radians) + vector2;
+    }
 
     [[nodiscard]] constexpr Vector2 get_projected(const Vector2& axis) const
     {

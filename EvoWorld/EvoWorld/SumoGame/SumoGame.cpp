@@ -8,7 +8,6 @@
 #include <chrono>
 #include <numbers>
 #include <random>
-#include <ranges>
 #include <unordered_map>
 
 SumoGame::SumoGame(const std::mt19937& random_generator, Arena arena, const size_t participant_count, const double max_acceleration,
@@ -129,7 +128,7 @@ void SumoGame::update(const std::chrono::high_resolution_clock::time_point& now,
         moves[glider] = move_force;
     }
 
-    NewtonianPhysics<Glider>::apply_physics(time_step, coefficient_of_friction_, participants_, moves);
+    NewtonianPhysics<Glider, PhysicsStaticRectangle>::apply_physics(time_step, coefficient_of_friction_, moves, {});
 
     // Remove participants that are outside the arena
     reset_outside_participants(participants_);

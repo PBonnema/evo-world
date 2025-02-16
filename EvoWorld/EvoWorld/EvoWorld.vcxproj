@@ -145,8 +145,14 @@
   <ItemGroup>
     <ClCompile Include="CompoundShape.cpp" />
     <ClCompile Include="EvoWorld.cpp" />
-    <ClCompile Include="NewtonianPhysics.cpp" />
     <ClCompile Include="PhysicsDisk.cpp" />
+    <ClCompile Include="PhysicsStaticRectangle.cpp" />
+    <ClCompile Include="RacingGame\RacingTrack.cpp" />
+    <ClCompile Include="RacingGame\RacingGame.cpp" />
+    <ClCompile Include="RacingGame\Racers\EvoRacer.cpp" />
+    <ClCompile Include="RacingGame\Racers\Racer.cpp" />
+    <ClCompile Include="RacingGame\Racers\PlayerRacer.cpp" />
+    <ClCompile Include="RacingGame\TrackPiece.cpp" />
     <ClCompile Include="SumoGame\Arena.cpp" />
     <ClCompile Include="SumoGame\SumoGame.cpp" />
     <ClCompile Include="SumoGame\SumoGliders\CenteringGlider.cpp" />
@@ -161,6 +167,15 @@
     <ClInclude Include="fwd_decl.h" />
     <ClInclude Include="NewtonianPhysics.h" />
     <ClInclude Include="PhysicsDisk.h" />
+    <ClInclude Include="PhysicsStaticRectangle.h" />
+    <ClInclude Include="RacingGame\fwd_decl.h" />
+    <ClInclude Include="RacingGame\Racers\fwd_decl.h" />
+    <ClInclude Include="RacingGame\RacingTrack.h" />
+    <ClInclude Include="RacingGame\RacingGame.h" />
+    <ClInclude Include="RacingGame\Racers\EvoRacer.h" />
+    <ClInclude Include="RacingGame\Racers\Racer.h" />
+    <ClInclude Include="RacingGame\Racers\PlayerRacer.h" />
+    <ClInclude Include="RacingGame\TrackPiece.h" />
     <ClInclude Include="SumoGame\Arena.h" />
     <ClInclude Include="SumoGame\fwd_decl.h" />
     <ClInclude Include="SumoGame\SumoGame.h" />
@@ -172,6 +187,7 @@
     <ClInclude Include="SumoGame\SumoGliders\RushGlider.h" />
     <ClInclude Include="SumoGame\SumoGliders\TrajectoryGlider.h" />
     <ClInclude Include="Vector2.h" />
+    <ClInclude Include="Vector2_SfVector2f_conversions.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

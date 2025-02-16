@@ -5,10 +5,10 @@
 Arena::Arena(const Vector2<double>& center, const double radius) :
     center_{center},
     radius_{radius},
-    shape_{{std::make_unique<sf::CircleShape>(static_cast<float>(radius), 100)}}
+    shape_{{std::make_shared<sf::CircleShape>(static_cast<float>(radius), 100)}}
 {
-    auto& circle = *dynamic_cast<sf::CircleShape*>(shape_.get_drawables()[0].get());
-    circle.setFillColor(sf::Color::Blue);
+    auto& shape = *dynamic_cast<sf::CircleShape*>(shape_.get_drawables()[0].get());
+    shape.setFillColor(sf::Color::Blue);
 }
 
 const CompoundShape& Arena::get_shape() const
